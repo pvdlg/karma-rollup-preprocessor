@@ -111,7 +111,7 @@ npm install rollup @metahub/karma-rollup-preprocessor rollup-plugin-babel babel-
 |   ├── dependency.js // imported by src/main.js
 ```
 ```javascript
-// main.test.js
+// main.js
 
 import './*.test.js'; // using https://github.com/kei-ito/rollup-plugin-glob-import
 
