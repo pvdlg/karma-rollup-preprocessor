@@ -107,7 +107,7 @@ export async function waitForRunComplete(server) {
 
     return result;
   } catch (err) {
-    if (err instanceof Array) {
+    if (Array.isArray(err)) {
       const [{lastResult: {success, failed, error, disconnected}}, errMsg] = err;
 
       return {success, failed, error, disconnected, exitCode: 1, errMsg};
