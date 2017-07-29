@@ -1,7 +1,7 @@
 {
   "name": "@metahub/karma-rollup-preprocessor",
   "description": "Karma preprocessor to bundle modules using Rollup with sourcemap and watch support",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Pierre Vanduynslager",
   "bugs": {
     "url": "https://github.com/vanduynslagerp/karma-rollup-preprocessor/issues"
