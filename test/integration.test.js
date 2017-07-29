@@ -79,7 +79,8 @@ test('Re-compile JS file when dependency is modified', async t => {
     copy('test/fixtures/modules/sub-module.js', subModule),
     copy('test/fixtures/basic.js', fixture),
   ]);
-  const server = await watch([fixture], {
+  console.log(fixture.replace('fixtures', '*').replace('basic', '+(js|nomatch)'));
+  const server = await watch([fixture.replace('fixtures', '*').replace('basic', '+(basic|nomatch)')], {
     options: {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]},
   });
 
