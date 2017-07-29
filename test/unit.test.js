@@ -119,6 +119,25 @@ test('Add dependency to watcher', async t => {
   t.true(add.calledOnce);
 });
 
+test('Add dependency to watcher  for file added with glob', async t => {
+  const fixture = 'test/fixtures/basic.js';
+  const glob = 'test/*/+(basic|nomatch).js';
+  const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
+  const module = path.resolve('test/fixtures/modules/module.js');
+  const subModule = path.resolve('test/fixtures/modules/sub-module.js');
+  const {preprocessor, add, debug} = mockPreprocessor(
+    {},
+    {files: [{pattern: glob, watched: true}], autoWatch: true, rollupPreprocessor: {options}}
+  );
+  const file = {originalPath: fixture};
+
+  await preprocessor(await readFile(fixture), file);
+  t.true(debug.secondCall.calledWith(match('Watching'), subModule));
+  t.true(debug.thirdCall.calledWith(match('Watching'), module));
+  t.true(add.firstCall.calledWith(match.array.deepEquals([subModule, module])));
+  t.true(add.calledOnce);
+});
+
 test('Do not add dependency to watcher if parent is not watched', async t => {
   const fixture = 'test/fixtures/basic.js';
   const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
