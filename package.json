@@ -43,7 +43,7 @@
     "rimraf": "^2.6.1",
     "rollup": "^0.45.2",
     "rollup-plugin-babel": "^2.7.1",
-    "sinon": "^2.4.1",
+    "sinon": "^3.0.0",
     "uuid": "^3.1.0"
   },
   "peerDependencies": {
