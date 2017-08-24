@@ -41,12 +41,11 @@ const KARMA_CONFIG = {
  * @param {Object} [config] configuration to pass to the preprocessor.
  * @return {Promise<KarmaOutput>} A `Promise` that resolve to the Karma execution results.
  */
-export async function run(files, config) {
+export function run(files, config) {
   const server = createServer(files, config, false);
+  const result = waitForRunComplete(server);
 
   server.start();
-  const result = await waitForRunComplete(server);
-
   return result;
 }
 
@@ -101,7 +100,7 @@ export async function waitForRunComplete(server) {
   try {
     const [, result] = await pEvent(server, 'run_complete', {
       multiArgs: true,
-      timeout: 10000,
+      timeout: 15000,
       rejectionEvents: ['browser_error'],
     });
 

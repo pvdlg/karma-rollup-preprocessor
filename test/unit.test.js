@@ -333,7 +333,7 @@ test('Call refreshFiles when dependency is modified', async t => {
   const change = waitFor(watcher, 'change');
 
   // eslint-disable-next-line no-magic-numbers
-  await sleep(150);
+  await sleep(2000);
   utimes(module, Date.now() / 1000, Date.now() / 1000);
   t.is(path.resolve(module), await change);
   t.true(info.firstCall.calledWith(match('Changed file'), path.resolve(module)));
@@ -363,7 +363,7 @@ test('Call refreshFiles when dependency is deleted and added', async t => {
   const del = waitFor(watcher, 'unlink');
 
   // eslint-disable-next-line no-magic-numbers
-  await sleep(150);
+  await sleep(2000);
   remove(module);
   t.is(path.resolve(module), await del);
   t.true(info.firstCall.calledWith(match('Deleted file'), path.resolve(module)));
