@@ -1,4 +1,5 @@
 import proxyquire from 'proxyquire';
+import {merge} from 'lodash';
 import {spy, stub} from 'sinon';
 import pify from 'pify';
 import chokidar from 'chokidar';
@@ -28,8 +29,8 @@ export default function mockPreprocessor(args = {}, config = {}) {
   let add;
   let unwatch;
   let watcher;
-  const FSWatcher = stub().callsFake((...watcherArgs) => {
-    watcher = new chokidar.FSWatcher(...watcherArgs);
+  const FSWatcher = stub().callsFake(watcherArg => {
+    watcher = new chokidar.FSWatcher(merge(watcherArg, {usePolling: true}));
     add = spy(watcher, 'add');
     unwatch = spy(watcher, 'unwatch');
     return watcher;

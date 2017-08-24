@@ -34,10 +34,10 @@ export function sleep(delay) {
  * @method waitFor
  * @param {Object} emitter object that emit events.
  * @param {string} event event to listen to.
- * @param {Number} [timeout=5000] maximum time to wait for the event to be emitted.
+ * @param {Number} [timeout=30000] maximum time to wait for the event to be emitted.
  * @return {Promise} Promise tht resolve when the event is emitted.
  */
-export function waitFor(emitter, event, timeout = 5000) {
+export function waitFor(emitter, event, timeout = 30000) {
   return pEvent(emitter, event, {timeout});
 }
 
