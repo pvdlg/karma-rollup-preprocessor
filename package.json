@@ -48,7 +48,7 @@
   },
   "peerDependencies": {
     "karma": ">=0.13.2",
-    "rollup": ">=0.45"
+    "rollup": ">=0.48"
   },
   "engines": {
     "node": ">=4"

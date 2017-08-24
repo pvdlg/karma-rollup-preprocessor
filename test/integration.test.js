@@ -30,7 +30,7 @@ test('Compile JS file', async t => {
 test('Compile JS file with sourcemap and verify the reporter logs use the sourcemap', async t => {
   const {success, failed, error, disconnected} = await run('test/fixtures/falsy-assert.js', {
     options: {
-      sourceMap: true,
+      sourcemap: true,
       format: 'umd',
       plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})],
     },
