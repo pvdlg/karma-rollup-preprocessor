@@ -17,7 +17,7 @@ import {rollup} from 'rollup';
 function createRollupPreprocessor(args, config, logger, server) {
   const preprocessorConfig = config.rollupPreprocessor || {};
   const log = logger.create('preprocessor.rollup');
-  const options = merge({sourceMap: false}, args.options || {}, preprocessorConfig.options || {});
+  const options = merge({sourcemap: false}, args.options || {}, preprocessorConfig.options || {});
   const transformPath =
     args.transformPath ||
     preprocessorConfig.transformPath ||
@@ -54,10 +54,10 @@ function createRollupPreprocessor(args, config, logger, server) {
     const opts = Object.assign({}, options);
 
     // Inline source maps
-    if (opts.sourceMap) {
-      opts.sourceMap = 'inline';
+    if (opts.sourcemap) {
+      opts.sourcemap = 'inline';
     }
-    opts.entry = file.originalPath;
+    opts.input = file.originalPath;
     opts.cache = cache;
 
     nodeify(
@@ -112,7 +112,7 @@ function createRollupPreprocessor(args, config, logger, server) {
           return bundle.generate(opts);
         })
         .then(generated => {
-          if (opts.sourceMap && generated.map) {
+          if (opts.sourcemap && generated.map) {
             generated.map.file = path.basename(file.path);
             file.sourceMap = generated.map;
             return `${generated.code}\n//# sourceMappingURL=${generated.map.toUrl()}\n`;

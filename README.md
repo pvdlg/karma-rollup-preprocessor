@@ -42,7 +42,7 @@ module.exports = function(config) {
     rollupPreprocessor: {
       options: {
         // To include inlined sourcemaps as data URIs
-        sourceMap: true,
+        sourcemap: true,
         // To compile with babel using es2015 preset
         plugins: [babel({presets: [['es2015', {modules: false}]]})]
         format: 'iife',
@@ -72,7 +72,7 @@ module.exports = function(config) {
       rollup_1: {
         base: 'rollup',
         options: {
-          sourceMap: false,
+          sourcemap: false,
           plugins: [babel({presets: [['es2015', {modules: false}]]})]
           format: 'iife',
         },
@@ -80,7 +80,7 @@ module.exports = function(config) {
       rollup_2: {
         base: 'rollup',
         options: {
-          sourceMap: true,
+          sourcemap: true,
           plugins: [babel({presets: [['es2015', {modules: false}]]})]
           format: 'iife',
         },
@@ -151,7 +151,7 @@ module.exports = function(config) {
 
     rollupPreprocessor: {
       options: {
-        sourceMap: true,
+        sourcemap: true,
         plugins: [globImport(), babel({presets: [['es2015', {modules: false}]]})]
         format: 'iife',
       },
