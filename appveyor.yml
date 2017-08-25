@@ -10,7 +10,7 @@ branches:
     - /^greenkeeper.*$/
 install:
   - ps: Install-Product node $env:nodejs_version
-  - IF %nodejs_version% LSS 5 npm -g install npm@3
+  - IF %nodejs_version% LSS 5 npm -g install npm@5
   - npm install
 platform:
   - x86
