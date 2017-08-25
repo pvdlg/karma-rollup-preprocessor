@@ -29,7 +29,7 @@
     "eslint-plugin-json": "^1.2.0",
     "eslint-plugin-prettier": "^2.1.2",
     "eslint-plugin-promise": "^3.5.0",
-    "fs-extra": "^4.0.0",
+    "fs-extra": "^4.0.1",
     "jasmine-core": "^2.8.0",
     "karma": "^1.7.0",
     "karma-jasmine": "^1.1.0",
