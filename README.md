@@ -9,6 +9,7 @@ Karma preprocessor to compile js files with [rollup](https://github.com/rollup/r
 [![Greenkeeper badge](https://badges.greenkeeper.io/vanduynslagerp/karma-rollup-preprocessor.svg)](https://greenkeeper.io/)
 [![license](https://img.shields.io/github/license/vanduynslagerp/karma-rollup-preprocessor.svg)](https://github.com/vanduynslagerp/karma-rollup-preprocessor/blob/master/LICENSE)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
 [![Travis](https://img.shields.io/travis/vanduynslagerp/karma-rollup-preprocessor.svg)](https://travis-ci.org/vanduynslagerp/karma-rollup-preprocessor)
 [![AppVeyor](https://img.shields.io/appveyor/ci/vanduynslagerp/karma-rollup-preprocessor.svg)](https://ci.appveyor.com/project/vanduynslagerp/karma-rollup-preprocessor)
