@@ -17,10 +17,10 @@ test('Compile JS file', async t => {
   t.is(path.resolve(file.path), path.resolve('test/fixtures/basic.js'));
 });
 
-test('Compile JS file with sourcemap (options.sourceMap)', async t => {
+test('Compile JS file with sourcemap (options.sourcemap)', async t => {
   const fixture = 'test/fixtures/basic.js';
   const options = {
-    sourceMap: true,
+    sourcemap: true,
     format: 'umd',
     plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})],
   };
@@ -36,10 +36,10 @@ test('Compile JS file with sourcemap (options.sourceMap)', async t => {
   t.is(path.resolve(file.path), path.resolve('test/fixtures/basic.js'));
 });
 
-test('Compile JS file with sourcemap (options.sourceMap) and custom preprocessor', async t => {
+test('Compile JS file with sourcemap (options.sourcemap) and custom preprocessor', async t => {
   const fixture = 'test/fixtures/basic.custom.js';
   const options = {
-    sourceMap: true,
+    sourcemap: true,
     format: 'umd',
     plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})],
   };
