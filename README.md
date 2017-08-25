@@ -4,16 +4,15 @@ Karma preprocessor to compile js files with [rollup](https://github.com/rollup/r
 
 > Support source maps (Karma reporter will log original file, line and column) and embed a file watcher to recompile and run the tests when a dependency is modified.
 
-[![Travis](https://img.shields.io/travis/vanduynslagerp/karma-rollup-preprocessor.svg)](https://travis-ci.org/vanduynslagerp/karma-rollup-preprocessor)
-[![AppVeyor](https://img.shields.io/appveyor/ci/vanduynslagerp/karma-rollup-preprocessor.svg)](https://ci.appveyor.com/project/vanduynslagerp/karma-rollup-preprocessor)
-[![Code Climate](https://img.shields.io/codeclimate/github/vanduynslagerp/karma-rollup-preprocessor.svg)](https://codeclimate.com/github/vanduynslagerp/karma-rollup-preprocessor)
-[![Code Climate](https://img.shields.io/codeclimate/issues/github/vanduynslagerp/karma-rollup-preprocessor.svg)](https://codeclimate.com/github/vanduynslagerp/karma-rollup-preprocessor/issues)
-[![Codecov](https://img.shields.io/codecov/c/github/vanduynslagerp/karma-rollup-preprocessor.svg)](https://codecov.io/gh/vanduynslagerp/karma-rollup-preprocessor)
-
 [![npm](https://img.shields.io/npm/v/@metahub/karma-rollup-preprocessor.svg)](https://www.npmjs.com/package/@metahub/karma-rollup-preprocessor)
 [![npm](https://img.shields.io/npm/dt/@metahub/karma-rollup-preprocessor.svg)](https://www.npmjs.com/package/@metahub/karma-rollup-preprocessor)
 [![Greenkeeper badge](https://badges.greenkeeper.io/vanduynslagerp/karma-rollup-preprocessor.svg)](https://greenkeeper.io/)
 [![license](https://img.shields.io/github/license/vanduynslagerp/karma-rollup-preprocessor.svg)](https://github.com/vanduynslagerp/karma-rollup-preprocessor/blob/master/LICENSE)
+
+[![Travis](https://img.shields.io/travis/vanduynslagerp/karma-rollup-preprocessor.svg)](https://travis-ci.org/vanduynslagerp/karma-rollup-preprocessor)
+[![AppVeyor](https://img.shields.io/appveyor/ci/vanduynslagerp/karma-rollup-preprocessor.svg)](https://ci.appveyor.com/project/vanduynslagerp/karma-rollup-preprocessor)
+[![Code Climate](https://img.shields.io/codeclimate/github/vanduynslagerp/karma-rollup-preprocessor.svg)](https://codeclimate.com/github/vanduynslagerp/karma-rollup-preprocessor)
+[![Codecov](https://img.shields.io/codecov/c/github/vanduynslagerp/karma-rollup-preprocessor.svg)](https://codecov.io/gh/vanduynslagerp/karma-rollup-preprocessor)
 
 ## Installation
 
