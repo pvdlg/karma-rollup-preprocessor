@@ -6,6 +6,11 @@
   "bugs": {
     "url": "https://github.com/vanduynslagerp/karma-rollup-preprocessor/issues"
   },
+  "config": {
+    "commitizen": {
+      "path": "@metahub/cz-conventional-commit"
+    }
+  },
   "dependencies": {
     "chokidar": "^1.7.0",
     "lodash": "^4.17.4",
