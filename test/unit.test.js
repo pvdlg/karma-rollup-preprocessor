@@ -1,15 +1,15 @@
 import path from 'path';
-import {readFile, utimes, copy, outputFile, remove} from 'fs-extra';
+import {readFile, copy, outputFile, remove} from 'fs-extra';
 import test from 'ava';
 import {spy, match} from 'sinon';
 import babel from 'rollup-plugin-babel';
-import {tmp, sleep, waitFor, compile} from './helpers/utils';
-import mockPreprocessor from './helpers/mock';
+import {tmp, waitFor, compile} from './helpers/utils';
+import {mockPreprocessor} from './helpers/mock';
 
 test('Compile JS file', async t => {
   const fixture = 'test/fixtures/basic.js';
   const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
-  const {preprocessor, debug} = mockPreprocessor({}, {rollupPreprocessor: {options}});
+  const {preprocessor, debug} = await mockPreprocessor({}, {rollupPreprocessor: {options}});
   const file = {originalPath: fixture};
 
   t.is(await preprocessor(await readFile(fixture), file), (await compile(fixture, options)).code);
@@ -24,7 +24,7 @@ test('Compile JS file with sourcemap (options.sourcemap)', async t => {
     format: 'umd',
     plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})],
   };
-  const {preprocessor, debug} = mockPreprocessor({}, {rollupPreprocessor: {options}});
+  const {preprocessor, debug} = await mockPreprocessor({}, {rollupPreprocessor: {options}});
   const file = {originalPath: fixture};
   const {code, map} = await compile(fixture, options);
 
@@ -43,7 +43,7 @@ test('Compile JS file with sourcemap (options.sourcemap) and custom preprocessor
     format: 'umd',
     plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})],
   };
-  const {preprocessor, debug} = mockPreprocessor({options});
+  const {preprocessor, debug} = await mockPreprocessor({options});
   const file = {originalPath: fixture};
   const {code, map} = await compile(fixture, options);
 
@@ -59,7 +59,7 @@ test('Compile JS file with custom transformPath', async t => {
   const fixture = 'test/fixtures/basic.js';
   const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
   const transformPath = spy(filePath => filePath.replace(/\.(js)$/, '.jsx').replace('fixtures/', ''));
-  const {preprocessor, debug} = mockPreprocessor({}, {rollupPreprocessor: {options, transformPath}});
+  const {preprocessor, debug} = await mockPreprocessor({}, {rollupPreprocessor: {options, transformPath}});
   const file = {originalPath: fixture};
 
   t.is(await preprocessor(await readFile(fixture), file), (await compile(fixture, options)).code);
@@ -72,7 +72,7 @@ test('Compile JS file with custom transformPath and custom preprocessor', async 
   const fixture = 'test/fixtures/basic.js';
   const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
   const transformPath = spy(filePath => filePath.replace(/\.(js)$/, '.jsx').replace('fixtures/', ''));
-  const {preprocessor, debug} = mockPreprocessor({options, transformPath});
+  const {preprocessor, debug} = await mockPreprocessor({options, transformPath});
   const file = {originalPath: fixture};
 
   t.is(await preprocessor(await readFile(fixture), file), (await compile(fixture, options)).code);
@@ -83,7 +83,7 @@ test('Compile JS file with custom transformPath and custom preprocessor', async 
 
 test('Log error on invalid JS file', async t => {
   const fixture = 'test/fixtures/error.js';
-  const {preprocessor, debug, error} = mockPreprocessor();
+  const {preprocessor, debug, error} = await mockPreprocessor();
   const file = {originalPath: fixture};
   const err = await t.throws(preprocessor(await readFile(fixture), file), Error);
 
@@ -92,12 +92,11 @@ test('Log error on invalid JS file', async t => {
   t.true(error.firstCall.calledWith(match.string, fixture, match('Could not resolve')));
 });
 
-test('Instanciate watcher only if autoWatch is true', t => {
-  let {FSWatcher} = mockPreprocessor();
+test('Instanciate watcher only if autoWatch is true', async t => {
+  let {FSWatcher} = await mockPreprocessor();
 
   t.true(FSWatcher.notCalled);
-  ({FSWatcher} = mockPreprocessor({}, {autoWatch: true}));
-
+  ({FSWatcher} = await mockPreprocessor({}, {autoWatch: true}));
   t.true(FSWatcher.calledOnce);
 });
 
@@ -106,7 +105,7 @@ test('Add dependency to watcher', async t => {
   const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
   const module = path.resolve('test/fixtures/modules/module.js');
   const subModule = path.resolve('test/fixtures/modules/sub-module.js');
-  const {preprocessor, add, debug} = mockPreprocessor(
+  const {preprocessor, debug, watcher} = await mockPreprocessor(
     {},
     {files: [{pattern: fixture, watched: true}], autoWatch: true, rollupPreprocessor: {options}}
   );
@@ -115,17 +114,17 @@ test('Add dependency to watcher', async t => {
   await preprocessor(await readFile(fixture), file);
   t.true(debug.secondCall.calledWith(match('Watching'), subModule));
   t.true(debug.thirdCall.calledWith(match('Watching'), module));
-  t.true(add.firstCall.calledWith(match.array.deepEquals([subModule, module])));
-  t.true(add.calledOnce);
+  t.true(watcher.add.firstCall.calledWith(match.array.deepEquals([subModule, module])));
+  t.true(watcher.add.calledOnce);
 });
 
-test('Add dependency to watcher  for file added with glob', async t => {
+test('Add dependency to watcher for file added with glob', async t => {
   const fixture = 'test/fixtures/basic.js';
   const glob = 'test/*/+(basic|nomatch).js';
   const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
   const module = path.resolve('test/fixtures/modules/module.js');
   const subModule = path.resolve('test/fixtures/modules/sub-module.js');
-  const {preprocessor, add, debug} = mockPreprocessor(
+  const {preprocessor, watcher, debug} = await mockPreprocessor(
     {},
     {files: [{pattern: glob, watched: true}], autoWatch: true, rollupPreprocessor: {options}}
   );
@@ -134,21 +133,21 @@ test('Add dependency to watcher  for file added with glob', async t => {
   await preprocessor(await readFile(fixture), file);
   t.true(debug.secondCall.calledWith(match('Watching'), subModule));
   t.true(debug.thirdCall.calledWith(match('Watching'), module));
-  t.true(add.firstCall.calledWith(match.array.deepEquals([subModule, module])));
-  t.true(add.calledOnce);
+  t.true(watcher.add.firstCall.calledWith(match.array.deepEquals([subModule, module])));
+  t.true(watcher.add.calledOnce);
 });
 
 test('Do not add dependency to watcher if parent is not watched', async t => {
   const fixture = 'test/fixtures/basic.js';
   const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
-  const {preprocessor, add} = mockPreprocessor(
+  const {preprocessor, watcher} = await mockPreprocessor(
     {},
     {autoWatch: true, files: [{pattern: fixture, watched: false}], rollupPreprocessor: {options}}
   );
   const file = {originalPath: fixture};
 
   await preprocessor(await readFile(fixture), file);
-  t.true(add.notCalled);
+  t.true(watcher.add.notCalled);
 });
 
 test('Add dependency to watcher only once, even when its referenced multiple times', async t => {
@@ -160,7 +159,7 @@ test('Add dependency to watcher only once, even when its referenced multiple tim
   const moduleAlt = path.join(includePath, 'module-alt.js');
   const subModule = path.join(includePath, 'sub-module.js');
   const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
-  const {preprocessor, add, debug} = mockPreprocessor(
+  const {preprocessor, debug, watcher} = await mockPreprocessor(
     {},
     {
       autoWatch: true,
@@ -181,11 +180,33 @@ test('Add dependency to watcher only once, even when its referenced multiple tim
   await preprocessor(await readFile(fixture), file);
   t.true(debug.secondCall.calledWith(match('Watching'), subModule));
   t.true(debug.thirdCall.calledWith(match('Watching'), module));
-  t.true(add.firstCall.calledWith(match.array.deepEquals([subModule, module])));
+  t.true(watcher.add.firstCall.calledWith(match.array.deepEquals([subModule, module])));
   debug.reset();
   await preprocessor(await readFile(otherFixture), otherFile);
-  t.true(add.calledOnce);
+  t.true(watcher.add.calledOnce);
   t.true(debug.calledOnce);
+});
+
+test('Add dependency to watcher only once if file is overwritten', async t => {
+  const fixture = 'test/fixtures/basic.js';
+  const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
+  const module = path.resolve('test/fixtures/modules/module.js');
+  const subModule = path.resolve('test/fixtures/modules/sub-module.js');
+  const {preprocessor, debug, watcher, refreshFiles} = await mockPreprocessor(
+    {},
+    {files: [{pattern: fixture, watched: true}], autoWatch: true, rollupPreprocessor: {options}}
+  );
+  const file = {originalPath: fixture};
+
+  await preprocessor(await readFile(fixture), file);
+  t.true(debug.secondCall.calledWith(match('Watching'), subModule));
+  t.true(debug.thirdCall.calledWith(match('Watching'), module));
+  t.true(watcher.add.firstCall.calledWith(match.array.deepEquals([subModule, module])));
+  t.true(watcher.add.calledOnce);
+  debug.reset();
+  watcher.emit('add', subModule);
+  await preprocessor(await readFile(fixture), file);
+  t.false(refreshFiles.calledTwice);
 });
 
 test('Remove dependency from watcher if not referenced anymore', async t => {
@@ -196,7 +217,7 @@ test('Remove dependency from watcher if not referenced anymore', async t => {
   const moduleAlt = path.join(includePath, 'module-alt.js');
   const subModule = path.join(includePath, 'sub-module.js');
   const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
-  const {preprocessor, add, debug, unwatch} = mockPreprocessor(
+  const {preprocessor, debug, watcher} = await mockPreprocessor(
     {},
     {autoWatch: true, files: [{pattern: fixture, watched: true}], rollupPreprocessor: {options}}
   );
@@ -209,7 +230,7 @@ test('Remove dependency from watcher if not referenced anymore', async t => {
     copy('test/fixtures/basic.js', fixture),
   ]);
   await preprocessor(await readFile(fixture), file);
-  add.reset();
+  watcher.add.reset();
   debug.reset();
   await outputFile(
     fixture,
@@ -218,12 +239,12 @@ test('Remove dependency from watcher if not referenced anymore', async t => {
       .replace(`import test from './modules/module';`, `import test from './modules/module-alt';`)
   );
   await preprocessor(await readFile(fixture), file);
-  t.true(unwatch.firstCall.calledWith(match.array.deepEquals([module])));
+  t.true(watcher.unwatch.firstCall.calledWith(match.array.deepEquals([module])));
   t.true(debug.thirdCall.calledWith(match('Stop watching'), module));
-  t.true(add.firstCall.calledWith(match.array.deepEquals([moduleAlt])));
+  t.true(watcher.add.firstCall.calledWith(match.array.deepEquals([moduleAlt])));
   t.true(debug.secondCall.calledWith(match('Watching'), moduleAlt));
-  t.true(unwatch.calledOnce);
-  t.true(add.calledOnce);
+  t.true(watcher.unwatch.calledOnce);
+  t.true(watcher.add.calledOnce);
 });
 
 test('Do not remove dependency from watcher when unreferenced, if another file still depends on it', async t => {
@@ -235,7 +256,7 @@ test('Do not remove dependency from watcher when unreferenced, if another file s
   const moduleAlt = path.join(includePath, 'module-alt.js');
   const subModule = path.join(includePath, 'sub-module.js');
   const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
-  const {preprocessor, add, debug, unwatch} = mockPreprocessor(
+  const {preprocessor, debug, watcher} = await mockPreprocessor(
     {},
     {
       autoWatch: true,
@@ -255,7 +276,7 @@ test('Do not remove dependency from watcher when unreferenced, if another file s
   ]);
   await preprocessor(await readFile(fixture), file);
   await preprocessor(await readFile(otherFixture), otherFile);
-  add.reset();
+  watcher.add.reset();
   debug.reset();
   await outputFile(
     fixture,
@@ -264,8 +285,8 @@ test('Do not remove dependency from watcher when unreferenced, if another file s
       .replace(`import test from './modules/module';`, `import test from './modules/module-alt';`)
   );
   await preprocessor(await readFile(fixture), file);
-  t.true(add.firstCall.calledWith(match.array.deepEquals([path.resolve(moduleAlt)])));
-  t.true(unwatch.notCalled);
+  t.true(watcher.add.firstCall.calledWith(match.array.deepEquals([path.resolve(moduleAlt)])));
+  t.true(watcher.unwatch.notCalled);
   t.true(debug.calledTwice);
 });
 
@@ -278,7 +299,7 @@ test('Do not remove dependency from watcher when different files have differents
   const moduleAlt = path.join(includePath, 'module-alt.js');
   const subModule = path.join(includePath, 'sub-module.js');
   const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
-  const {preprocessor, add, debug, unwatch} = mockPreprocessor(
+  const {preprocessor, debug, watcher} = await mockPreprocessor(
     {},
     {
       autoWatch: true,
@@ -303,11 +324,11 @@ test('Do not remove dependency from watcher when different files have differents
       .replace(`import test from './modules/module';`, `import test from './modules/module-alt';`)
   );
   await preprocessor(await readFile(fixture), file);
-  add.reset();
+  watcher.add.reset();
   debug.reset();
   await preprocessor(await readFile(otherFixture), otherFile);
-  t.true(add.calledOnce);
-  t.true(unwatch.notCalled);
+  t.true(watcher.add.calledOnce);
+  t.true(watcher.unwatch.notCalled);
   t.true(debug.calledTwice);
 });
 
@@ -318,7 +339,7 @@ test('Call refreshFiles when dependency is modified', async t => {
   const module = path.join(includePath, 'module.js');
   const subModule = path.join(includePath, 'sub-module.js');
   const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
-  const {preprocessor, watcher, info, refreshFiles} = mockPreprocessor(
+  const {preprocessor, watcher, info, refreshFiles} = await mockPreprocessor(
     {},
     {autoWatch: true, files: [{pattern: fixture, watched: true}], rollupPreprocessor: {options}}
   );
@@ -332,9 +353,7 @@ test('Call refreshFiles when dependency is modified', async t => {
   await preprocessor(await readFile(fixture), file);
   const change = waitFor(watcher, 'change');
 
-  // eslint-disable-next-line no-magic-numbers
-  await sleep(2000);
-  utimes(module, Date.now() / 1000, Date.now() / 1000);
+  watcher.emit('change', module);
   t.is(path.resolve(module), await change);
   t.true(info.firstCall.calledWith(match('Changed file'), path.resolve(module)));
   t.true(info.calledOnce);
@@ -348,7 +367,7 @@ test('Call refreshFiles when dependency is deleted and added', async t => {
   const module = path.join(includePath, 'module.js');
   const subModule = path.join(includePath, 'sub-module.js');
   const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
-  const {preprocessor, watcher, info, refreshFiles} = mockPreprocessor(
+  const {preprocessor, watcher, info, refreshFiles} = await mockPreprocessor(
     {},
     {autoWatch: true, files: [{pattern: fixture, watched: true}], rollupPreprocessor: {options}}
   );
@@ -362,9 +381,8 @@ test('Call refreshFiles when dependency is deleted and added', async t => {
   await preprocessor(await readFile(fixture), file);
   const del = waitFor(watcher, 'unlink');
 
-  // eslint-disable-next-line no-magic-numbers
-  await sleep(2000);
   remove(module);
+  watcher.emit('unlink', module);
   t.is(path.resolve(module), await del);
   t.true(info.firstCall.calledWith(match('Deleted file'), path.resolve(module)));
   t.true(info.calledOnce);
@@ -375,6 +393,7 @@ test('Call refreshFiles when dependency is deleted and added', async t => {
   const cpy = waitFor(watcher, 'add');
 
   await copy('test/fixtures/modules/module.js', module);
+  watcher.emit('add', module);
   t.is(path.resolve(module), await cpy);
   t.true(info.firstCall.calledWith(match('Added file'), path.resolve(module)));
   t.true(info.calledOnce);

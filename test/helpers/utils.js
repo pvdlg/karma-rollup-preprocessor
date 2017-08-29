@@ -13,20 +13,6 @@ export function tmp(filename) {
   return path.join('test/fixtures/.tmp', uuid(), filename || '');
 }
 
-/**
- * Return a Promise that resolve after a delay.
- * 
- * @method sleep
- * @param {Number} delay time after which to resolve the Promise.
- * @return {Promise} a Promise that resolve after a delay.
- */
-export function sleep(delay) {
-  // eslint-disable-next-line promise/avoid-new
-  return new Promise(resolve => {
-    setTimeout(resolve, delay);
-  });
-}
-
 /* eslint-disable no-magic-numbers */
 /**
  * Return a Promise that resolve when an event is emitted and reject after a timeout expire if the event is not emitted.
