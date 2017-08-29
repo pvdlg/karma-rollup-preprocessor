@@ -1,6 +1,7 @@
 import pEvent from 'p-event';
 import {Server, constants} from 'karma';
 import karmaPreprocessor from '../../lib/index';
+import {mockFactory} from './mock';
 
 /**
  * Base Karma configuration tu run preprocessor.
@@ -17,7 +18,6 @@ const KARMA_CONFIG = {
   colors: true,
   logLevel: constants.LOG_DISABLE,
   browsers: ['PhantomJS'],
-  plugins: ['karma-*', karmaPreprocessor],
 };
 
 /**
@@ -42,7 +42,7 @@ const KARMA_CONFIG = {
  * @return {Promise<KarmaOutput>} A `Promise` that resolve to the Karma execution results.
  */
 export function run(files, config) {
-  const server = createServer(files, config, false);
+  const server = createServer(files, config, false, karmaPreprocessor);
   const result = waitForRunComplete(server);
 
   server.start();
@@ -60,11 +60,12 @@ export function run(files, config) {
  * @param {Object} [config] configuration to pass to the preprocessor.
  * @return {Server} The started Karma Server.
  */
-export function watch(files, config) {
-  const server = createServer(files, config, true);
+export async function watch(files, config) {
+  const {factory, watcher} = mockFactory(true);
+  const server = createServer(files, config, true, factory);
 
   server.start();
-  return server;
+  return {server, watcher: await watcher};
 }
 
 /**
@@ -74,9 +75,10 @@ export function watch(files, config) {
  * @param {Array<string>} files path of the js files and unit tests.
  * @param {Object} [config] configuration to pass to the preprocessor.
  * @param {boolean} autoWatch `true` for autoWatch mode, `false` for a single run.
+ * @param {Object} processorFactory Karma plugin factory.
  * @return {Server} the configured Karma Server.
  */
-function createServer(files, config, autoWatch) {
+function createServer(files, config, autoWatch, processorFactory) {
   return new Server(
     Object.assign(KARMA_CONFIG, {
       files: Array.isArray(files) ? files : [files],
@@ -84,6 +86,7 @@ function createServer(files, config, autoWatch) {
       customPreprocessors: {custom_rollup: Object.assign({base: 'rollup'}, config)},
       singleRun: !autoWatch,
       autoWatch,
+      plugins: ['karma-*', processorFactory],
     }),
     () => 0
   );
@@ -100,7 +103,7 @@ export async function waitForRunComplete(server) {
   try {
     const [, result] = await pEvent(server, 'run_complete', {
       multiArgs: true,
-      timeout: 15000,
+      timeout: 50000,
       rejectionEvents: ['browser_error'],
     });
 
