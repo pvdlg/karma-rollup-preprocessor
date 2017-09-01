@@ -56,7 +56,8 @@
     "sinon": "^3.2.1",
     "sr-commit-analyzer": "^2.0.2",
     "sr-release-notes-generator": "^1.1.2",
-    "uuid": "^3.1.0"
+    "temp-dir": "^1.0.0",
+    "tempy": "^0.1.0"
   },
   "engines": {
     "node": ">=4"
@@ -113,7 +114,7 @@
     "url": "https://github.com/vanduynslagerp/karma-rollup-preprocessor.git"
   },
   "scripts": {
-    "clean": "rimraf test/fixtures/.tmp && rimraf coverage && rimraf .nyc_output",
+    "clean": "rimraf coverage && rimraf .nyc_output",
     "cm": "git-cz",
     "codecov": "codecov",
     "commitmsg": "commitlint -e",
