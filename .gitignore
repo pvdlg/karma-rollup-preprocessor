@@ -129,5 +129,4 @@ $RECYCLE.BIN/
 
 yarn.lock
 package-lock.json
-test/fixtures/.tmp
 lib

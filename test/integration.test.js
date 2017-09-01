@@ -1,10 +1,10 @@
 import path from 'path';
 import {copy} from 'fs-extra';
 import test from 'ava';
-import babel from 'rollup-plugin-babel';
 import {stub, match} from 'sinon';
+import tempy from 'tempy';
+import babel from 'rollup-plugin-babel';
 import {run, watch, waitForRunComplete} from './helpers/karma';
-import {tmp} from './helpers/utils';
 
 let stubWrite;
 
@@ -18,7 +18,10 @@ test.after(() => {
 
 test('Compile JS file', async t => {
   const {success, error, disconnected, errMsg} = await run('test/fixtures/basic.js', {
-    options: {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]},
+    options: {
+      format: 'umd',
+      plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
+    },
   });
 
   t.ifError(error, `Karma returned the error: ${errMsg}`);
@@ -31,7 +34,7 @@ test('Compile JS file with sourcemap and verify the reporter logs use the source
     options: {
       sourcemap: true,
       format: 'umd',
-      plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})],
+      plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
     },
   });
 
@@ -50,7 +53,10 @@ test('Compile JS file with sourcemap and verify the reporter logs use the source
 
 test('Compile JS file with custom preprocessor', async t => {
   const {success, error, disconnected, errMsg} = await run('test/fixtures/basic.custom.js', {
-    options: {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]},
+    options: {
+      format: 'umd',
+      plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
+    },
   });
 
   t.ifError(error, `Karma returned the error: ${errMsg}`);
@@ -67,7 +73,7 @@ test('Log error on invalid JS file', async t => {
 });
 
 test('Re-compile JS file when dependency is modified', async t => {
-  const dir = path.resolve(tmp());
+  const dir = tempy.directory();
   const fixture = path.join(dir, 'basic.js');
   const includePath = path.join(dir, 'modules');
   const module = path.join(includePath, 'module.js');
@@ -80,7 +86,10 @@ test('Re-compile JS file when dependency is modified', async t => {
   ]);
 
   const {server, watcher} = await watch([fixture.replace('fixtures', '*').replace('basic', '+(basic|nomatch)')], {
-    options: {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]},
+    options: {
+      format: 'umd',
+      plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
+    },
   });
 
   try {

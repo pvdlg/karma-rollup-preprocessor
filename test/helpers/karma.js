@@ -1,4 +1,5 @@
 import pEvent from 'p-event';
+import tempDir from 'temp-dir';
 import {Server, constants} from 'karma';
 import karmaPreprocessor from '../../lib/index';
 import {mockFactory} from './mock';
@@ -14,6 +15,8 @@ const KARMA_CONFIG = {
   preprocessors: {
     'test/fixtures/**/!(*custom).js': ['rollup'],
     'test/fixtures/**/*custom.js': ['custom_rollup'],
+    [`${tempDir}/**/!(*custom).js`]: ['rollup'],
+    [`${tempDir}/**/*custom.js`]: ['custom_rollup'],
   },
   colors: true,
   logLevel: constants.LOG_DISABLE,

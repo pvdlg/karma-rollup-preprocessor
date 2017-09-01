@@ -2,13 +2,17 @@ import path from 'path';
 import {readFile, copy, outputFile, remove} from 'fs-extra';
 import test from 'ava';
 import {spy, match} from 'sinon';
+import tempy from 'tempy';
 import babel from 'rollup-plugin-babel';
-import {tmp, waitFor, compile} from './helpers/utils';
+import {waitFor, compile} from './helpers/utils';
 import {mockPreprocessor} from './helpers/mock';
 
 test('Compile JS file', async t => {
   const fixture = 'test/fixtures/basic.js';
-  const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
+  const options = {
+    format: 'umd',
+    plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
+  };
   const {preprocessor, debug} = await mockPreprocessor({}, {rollupPreprocessor: {options}});
   const file = {originalPath: fixture};
 
@@ -22,7 +26,7 @@ test('Compile JS file with sourcemap (options.sourcemap)', async t => {
   const options = {
     sourcemap: true,
     format: 'umd',
-    plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})],
+    plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
   };
   const {preprocessor, debug} = await mockPreprocessor({}, {rollupPreprocessor: {options}});
   const file = {originalPath: fixture};
@@ -41,7 +45,7 @@ test('Compile JS file with sourcemap (options.sourcemap) and custom preprocessor
   const options = {
     sourcemap: true,
     format: 'umd',
-    plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})],
+    plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
   };
   const {preprocessor, debug} = await mockPreprocessor({options});
   const file = {originalPath: fixture};
@@ -57,7 +61,10 @@ test('Compile JS file with sourcemap (options.sourcemap) and custom preprocessor
 
 test('Compile JS file with custom transformPath', async t => {
   const fixture = 'test/fixtures/basic.js';
-  const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
+  const options = {
+    format: 'umd',
+    plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
+  };
   const transformPath = spy(filePath => filePath.replace(/\.(js)$/, '.jsx').replace('fixtures/', ''));
   const {preprocessor, debug} = await mockPreprocessor({}, {rollupPreprocessor: {options, transformPath}});
   const file = {originalPath: fixture};
@@ -70,7 +77,10 @@ test('Compile JS file with custom transformPath', async t => {
 
 test('Compile JS file with custom transformPath and custom preprocessor', async t => {
   const fixture = 'test/fixtures/basic.js';
-  const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
+  const options = {
+    format: 'umd',
+    plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
+  };
   const transformPath = spy(filePath => filePath.replace(/\.(js)$/, '.jsx').replace('fixtures/', ''));
   const {preprocessor, debug} = await mockPreprocessor({options, transformPath});
   const file = {originalPath: fixture};
@@ -102,7 +112,10 @@ test('Instanciate watcher only if autoWatch is true', async t => {
 
 test('Add dependency to watcher', async t => {
   const fixture = 'test/fixtures/basic.js';
-  const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
+  const options = {
+    format: 'umd',
+    plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
+  };
   const module = path.resolve('test/fixtures/modules/module.js');
   const subModule = path.resolve('test/fixtures/modules/sub-module.js');
   const {preprocessor, debug, watcher} = await mockPreprocessor(
@@ -121,7 +134,10 @@ test('Add dependency to watcher', async t => {
 test('Add dependency to watcher for file added with glob', async t => {
   const fixture = 'test/fixtures/basic.js';
   const glob = 'test/*/+(basic|nomatch).js';
-  const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
+  const options = {
+    format: 'umd',
+    plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
+  };
   const module = path.resolve('test/fixtures/modules/module.js');
   const subModule = path.resolve('test/fixtures/modules/sub-module.js');
   const {preprocessor, watcher, debug} = await mockPreprocessor(
@@ -139,7 +155,10 @@ test('Add dependency to watcher for file added with glob', async t => {
 
 test('Do not add dependency to watcher if parent is not watched', async t => {
   const fixture = 'test/fixtures/basic.js';
-  const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
+  const options = {
+    format: 'umd',
+    plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
+  };
   const {preprocessor, watcher} = await mockPreprocessor(
     {},
     {autoWatch: true, files: [{pattern: fixture, watched: false}], rollupPreprocessor: {options}}
@@ -151,14 +170,17 @@ test('Do not add dependency to watcher if parent is not watched', async t => {
 });
 
 test('Add dependency to watcher only once, even when its referenced multiple times', async t => {
-  const dir = path.resolve(tmp());
+  const dir = tempy.directory();
   const fixture = path.join(dir, 'basic.js');
   const otherFixture = path.join(dir, 'other-basic.js');
   const includePath = path.join(dir, 'modules');
   const module = path.join(includePath, 'module.js');
   const moduleAlt = path.join(includePath, 'module-alt.js');
   const subModule = path.join(includePath, 'sub-module.js');
-  const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
+  const options = {
+    format: 'umd',
+    plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
+  };
   const {preprocessor, debug, watcher} = await mockPreprocessor(
     {},
     {
@@ -189,7 +211,10 @@ test('Add dependency to watcher only once, even when its referenced multiple tim
 
 test('Add dependency to watcher only once if file is overwritten', async t => {
   const fixture = 'test/fixtures/basic.js';
-  const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
+  const options = {
+    format: 'umd',
+    plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
+  };
   const module = path.resolve('test/fixtures/modules/module.js');
   const subModule = path.resolve('test/fixtures/modules/sub-module.js');
   const {preprocessor, debug, watcher, refreshFiles} = await mockPreprocessor(
@@ -210,13 +235,16 @@ test('Add dependency to watcher only once if file is overwritten', async t => {
 });
 
 test('Remove dependency from watcher if not referenced anymore', async t => {
-  const dir = path.resolve(tmp());
+  const dir = tempy.directory();
   const fixture = path.join(dir, 'basic.js');
   const includePath = path.join(dir, 'modules');
   const module = path.join(includePath, 'module.js');
   const moduleAlt = path.join(includePath, 'module-alt.js');
   const subModule = path.join(includePath, 'sub-module.js');
-  const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
+  const options = {
+    format: 'umd',
+    plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
+  };
   const {preprocessor, debug, watcher} = await mockPreprocessor(
     {},
     {autoWatch: true, files: [{pattern: fixture, watched: true}], rollupPreprocessor: {options}}
@@ -248,14 +276,17 @@ test('Remove dependency from watcher if not referenced anymore', async t => {
 });
 
 test('Do not remove dependency from watcher when unreferenced, if another file still depends on it', async t => {
-  const dir = path.resolve(tmp());
+  const dir = tempy.directory();
   const fixture = path.join(dir, 'basic.js');
   const otherFixture = path.join(dir, 'other-basic.js');
   const includePath = path.join(dir, 'modules');
   const module = path.join(includePath, 'module.js');
   const moduleAlt = path.join(includePath, 'module-alt.js');
   const subModule = path.join(includePath, 'sub-module.js');
-  const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
+  const options = {
+    format: 'umd',
+    plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
+  };
   const {preprocessor, debug, watcher} = await mockPreprocessor(
     {},
     {
@@ -291,14 +322,17 @@ test('Do not remove dependency from watcher when unreferenced, if another file s
 });
 
 test('Do not remove dependency from watcher when different files have differents childs', async t => {
-  const dir = path.resolve(tmp());
+  const dir = tempy.directory();
   const fixture = path.join(dir, 'basic.js');
   const otherFixture = path.join(dir, 'other-basic.js');
   const includePath = path.join(dir, 'modules');
   const module = path.join(includePath, 'module.js');
   const moduleAlt = path.join(includePath, 'module-alt.js');
   const subModule = path.join(includePath, 'sub-module.js');
-  const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
+  const options = {
+    format: 'umd',
+    plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
+  };
   const {preprocessor, debug, watcher} = await mockPreprocessor(
     {},
     {
@@ -333,12 +367,15 @@ test('Do not remove dependency from watcher when different files have differents
 });
 
 test('Call refreshFiles when dependency is modified', async t => {
-  const dir = path.resolve(tmp());
+  const dir = tempy.directory();
   const fixture = path.join(dir, 'basic.js');
   const includePath = path.join(dir, 'modules');
   const module = path.join(includePath, 'module.js');
   const subModule = path.join(includePath, 'sub-module.js');
-  const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
+  const options = {
+    format: 'umd',
+    plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
+  };
   const {preprocessor, watcher, info, refreshFiles} = await mockPreprocessor(
     {},
     {autoWatch: true, files: [{pattern: fixture, watched: true}], rollupPreprocessor: {options}}
@@ -361,12 +398,15 @@ test('Call refreshFiles when dependency is modified', async t => {
 });
 
 test('Call refreshFiles when dependency is deleted and added', async t => {
-  const dir = path.resolve(tmp());
+  const dir = tempy.directory();
   const fixture = path.join(dir, 'basic.js');
   const includePath = path.join(dir, 'modules');
   const module = path.join(includePath, 'module.js');
   const subModule = path.join(includePath, 'sub-module.js');
-  const options = {format: 'umd', plugins: [babel({babelrc: false, presets: [['es2015', {modules: false}]]})]};
+  const options = {
+    format: 'umd',
+    plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
+  };
   const {preprocessor, watcher, info, refreshFiles} = await mockPreprocessor(
     {},
     {autoWatch: true, files: [{pattern: fixture, watched: true}], rollupPreprocessor: {options}}
