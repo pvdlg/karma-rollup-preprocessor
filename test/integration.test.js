@@ -19,7 +19,7 @@ test.after(() => {
 test('Compile JS file', async t => {
   const {success, error, disconnected, errMsg} = await run('test/fixtures/basic.js', {
     options: {
-      format: 'umd',
+      output: {format: 'umd'},
       plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
     },
   });
@@ -32,8 +32,7 @@ test('Compile JS file', async t => {
 test('Compile JS file with sourcemap and verify the reporter logs use the sourcemap', async t => {
   const {success, failed, error, disconnected} = await run('test/fixtures/falsy-assert.js', {
     options: {
-      sourcemap: true,
-      format: 'umd',
+      output: {sourcemap: true, format: 'umd'},
       plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
     },
   });
@@ -54,7 +53,7 @@ test('Compile JS file with sourcemap and verify the reporter logs use the source
 test('Compile JS file with custom preprocessor', async t => {
   const {success, error, disconnected, errMsg} = await run('test/fixtures/basic.custom.js', {
     options: {
-      format: 'umd',
+      output: {format: 'umd'},
       plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
     },
   });
@@ -87,7 +86,7 @@ test('Re-compile JS file when dependency is modified', async t => {
 
   const {server, watcher} = await watch([fixture.replace('fixtures', '*').replace('basic', '+(basic|nomatch)')], {
     options: {
-      format: 'umd',
+      output: {format: 'umd'},
       plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
     },
   });

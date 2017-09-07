@@ -53,9 +53,12 @@ function createRollupPreprocessor(args, config, logger, server) {
     // Clone the options because we need to mutate them
     const opts = Object.assign({}, options);
 
+    if (!opts.output) {
+      opts.output = {};
+    }
     // Inline source maps
-    if (opts.sourcemap) {
-      opts.sourcemap = 'inline';
+    if (opts.sourcemap || opts.output.sourcemap) {
+      opts.output.sourcemap = 'inline';
     }
     opts.input = file.originalPath;
     opts.cache = cache;
@@ -109,10 +112,10 @@ function createRollupPreprocessor(args, config, logger, server) {
             }
           }
           cache = bundle;
-          return bundle.generate(opts);
+          return bundle.generate(opts.output);
         })
         .then(generated => {
-          if (opts.sourcemap && generated.map) {
+          if (opts.output.sourcemap && generated.map) {
             generated.map.file = path.basename(file.path);
             file.sourceMap = generated.map;
             return `${generated.code}\n//# sourceMappingURL=${generated.map.toUrl()}\n`;

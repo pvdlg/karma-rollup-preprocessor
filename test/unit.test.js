@@ -10,7 +10,7 @@ import {mockPreprocessor} from './helpers/mock';
 test('Compile JS file', async t => {
   const fixture = 'test/fixtures/basic.js';
   const options = {
-    format: 'umd',
+    output: {format: 'umd'},
     plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
   };
   const {preprocessor, debug} = await mockPreprocessor({}, {rollupPreprocessor: {options}});
@@ -24,8 +24,7 @@ test('Compile JS file', async t => {
 test('Compile JS file with sourcemap (options.sourcemap)', async t => {
   const fixture = 'test/fixtures/basic.js';
   const options = {
-    sourcemap: true,
-    format: 'umd',
+    output: {sourcemap: true, format: 'umd'},
     plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
   };
   const {preprocessor, debug} = await mockPreprocessor({}, {rollupPreprocessor: {options}});
@@ -43,8 +42,7 @@ test('Compile JS file with sourcemap (options.sourcemap)', async t => {
 test('Compile JS file with sourcemap (options.sourcemap) and custom preprocessor', async t => {
   const fixture = 'test/fixtures/basic.custom.js';
   const options = {
-    sourcemap: true,
-    format: 'umd',
+    output: {sourcemap: true, format: 'umd'},
     plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
   };
   const {preprocessor, debug} = await mockPreprocessor({options});
@@ -62,7 +60,7 @@ test('Compile JS file with sourcemap (options.sourcemap) and custom preprocessor
 test('Compile JS file with custom transformPath', async t => {
   const fixture = 'test/fixtures/basic.js';
   const options = {
-    format: 'umd',
+    output: {format: 'umd'},
     plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
   };
   const transformPath = spy(filePath => filePath.replace(/\.(js)$/, '.jsx').replace('fixtures/', ''));
@@ -78,7 +76,7 @@ test('Compile JS file with custom transformPath', async t => {
 test('Compile JS file with custom transformPath and custom preprocessor', async t => {
   const fixture = 'test/fixtures/basic.js';
   const options = {
-    format: 'umd',
+    output: {format: 'umd'},
     plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
   };
   const transformPath = spy(filePath => filePath.replace(/\.(js)$/, '.jsx').replace('fixtures/', ''));
@@ -113,7 +111,7 @@ test('Instanciate watcher only if autoWatch is true', async t => {
 test('Add dependency to watcher', async t => {
   const fixture = 'test/fixtures/basic.js';
   const options = {
-    format: 'umd',
+    output: {format: 'umd'},
     plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
   };
   const module = path.resolve('test/fixtures/modules/module.js');
@@ -135,7 +133,7 @@ test('Add dependency to watcher for file added with glob', async t => {
   const fixture = 'test/fixtures/basic.js';
   const glob = 'test/*/+(basic|nomatch).js';
   const options = {
-    format: 'umd',
+    output: {format: 'umd'},
     plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
   };
   const module = path.resolve('test/fixtures/modules/module.js');
@@ -156,7 +154,7 @@ test('Add dependency to watcher for file added with glob', async t => {
 test('Do not add dependency to watcher if parent is not watched', async t => {
   const fixture = 'test/fixtures/basic.js';
   const options = {
-    format: 'umd',
+    output: {format: 'umd'},
     plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
   };
   const {preprocessor, watcher} = await mockPreprocessor(
@@ -178,7 +176,7 @@ test('Add dependency to watcher only once, even when its referenced multiple tim
   const moduleAlt = path.join(includePath, 'module-alt.js');
   const subModule = path.join(includePath, 'sub-module.js');
   const options = {
-    format: 'umd',
+    output: {format: 'umd'},
     plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
   };
   const {preprocessor, debug, watcher} = await mockPreprocessor(
@@ -212,7 +210,7 @@ test('Add dependency to watcher only once, even when its referenced multiple tim
 test('Add dependency to watcher only once if file is overwritten', async t => {
   const fixture = 'test/fixtures/basic.js';
   const options = {
-    format: 'umd',
+    output: {format: 'umd'},
     plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
   };
   const module = path.resolve('test/fixtures/modules/module.js');
@@ -242,7 +240,7 @@ test('Remove dependency from watcher if not referenced anymore', async t => {
   const moduleAlt = path.join(includePath, 'module-alt.js');
   const subModule = path.join(includePath, 'sub-module.js');
   const options = {
-    format: 'umd',
+    output: {format: 'umd'},
     plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
   };
   const {preprocessor, debug, watcher} = await mockPreprocessor(
@@ -284,7 +282,7 @@ test('Do not remove dependency from watcher when unreferenced, if another file s
   const moduleAlt = path.join(includePath, 'module-alt.js');
   const subModule = path.join(includePath, 'sub-module.js');
   const options = {
-    format: 'umd',
+    output: {format: 'umd'},
     plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
   };
   const {preprocessor, debug, watcher} = await mockPreprocessor(
@@ -330,7 +328,7 @@ test('Do not remove dependency from watcher when different files have differents
   const moduleAlt = path.join(includePath, 'module-alt.js');
   const subModule = path.join(includePath, 'sub-module.js');
   const options = {
-    format: 'umd',
+    output: {format: 'umd'},
     plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
   };
   const {preprocessor, debug, watcher} = await mockPreprocessor(
@@ -373,7 +371,7 @@ test('Call refreshFiles when dependency is modified', async t => {
   const module = path.join(includePath, 'module.js');
   const subModule = path.join(includePath, 'sub-module.js');
   const options = {
-    format: 'umd',
+    output: {format: 'umd'},
     plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
   };
   const {preprocessor, watcher, info, refreshFiles} = await mockPreprocessor(
@@ -404,7 +402,7 @@ test('Call refreshFiles when dependency is deleted and added', async t => {
   const module = path.join(includePath, 'module.js');
   const subModule = path.join(includePath, 'sub-module.js');
   const options = {
-    format: 'umd',
+    output: {format: 'umd'},
     plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
   };
   const {preprocessor, watcher, info, refreshFiles} = await mockPreprocessor(

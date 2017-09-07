@@ -24,7 +24,7 @@ npm install rollup @metahub/karma-rollup-preprocessor --save-dev
 
 ## Configuration
 
-All the [rollup](https://github.com/rollup/rollup) options can be passed to `rollupPreprocessor.options`.
+All the [rollup](https://rollupjs.org/#big-list-of-options) options can be passed to `rollupPreprocessor.options`.
 
 In addition the preprocessor accept a `transformPath` function, to rewrite the path on which the files are deployed on the Karma webserver. If not specified, the processed files will be accessible with the same paths as the originals. For example `test/unit.test.js` will be deployed as `base/test/unit.test.js`.
 
@@ -42,11 +42,13 @@ module.exports = function(config) {
 
     rollupPreprocessor: {
       options: {
-        // To include inlined sourcemaps as data URIs
-        sourcemap: true,
+        output: {
+          // To include inlined sourcemaps as data URIs
+          sourcemap: true,
+          format: 'iife'
+        },
         // To compile with babel using es2015 preset
         plugins: [babel({presets: [['es2015', {modules: false}]]})]
-        format: 'iife',
       },
       // File src/js/main.js will be deployed on Karma with path base/script/main.js
       transformPath: filePath => filePath.replace('src/js', 'script')
@@ -56,7 +58,7 @@ module.exports = function(config) {
 ```
 **_Note: Karma can auto-load plugins named `karma-*` (see [plugins](http://karma-runner.github.io/1.0/config/plugins.html)). Unfortunatly it doesn't work with [scoped packages](https://docs.npmjs.com/misc/scope), therefore `@metahub/karma-rollup-preprocessor` has to be explicitly added to the `plugins` configuration. In order to continue to automatically load other plugins you can add `karma-*` to the `plugins` configuration._**
 
-**_Note: `@metahub/karma-rollup-preprocessor` embed its own watcher to monitor js module dependencies, therefore only the main entry point has to be configured in Karma. If Karma is configured with `autoWatch: true`, the modification of an imported js module partial will trigger a new build and test run._**
+**_Note: `@metahub/karma-rollup-preprocessor` embed its own watcher to monitor js module dependencies, therefore only the main entry point has to be configured in Karma. If Karma is configured with `autoWatch: true`, the modification of an imported js module will trigger a new build and test run._**
 
 ### Configured Preprocessors
 See [configured preprocessors](http://karma-runner.github.io/1.0/config/preprocessors.html).
@@ -73,17 +75,21 @@ module.exports = function(config) {
       rollup_1: {
         base: 'rollup',
         options: {
-          sourcemap: false,
+          output: {
+            sourcemap: false,
+            format: 'iife'
+          },
           plugins: [babel({presets: [['es2015', {modules: false}]]})]
-          format: 'iife',
         },
       },
       rollup_2: {
         base: 'rollup',
         options: {
-          sourcemap: true,
+          output: {
+            sourcemap: true,
+            format: 'iife'
+          }
           plugins: [babel({presets: [['es2015', {modules: false}]]})]
-          format: 'iife',
         },
       },
     },
@@ -112,13 +118,13 @@ npm install rollup @metahub/karma-rollup-preprocessor rollup-plugin-babel babel-
 |   ├── dependency.js // imported by src/main.js
 ```
 ```javascript
-// main.js
+// test/main.js
 
 import './*.test.js'; // using https://github.com/kei-ito/rollup-plugin-glob-import
 
 ```
 ```javascript
-// unit-test-1.test.js
+// test/unit-test-1.test.js
 
 import {myUtil} from './helpers/utils.js';
 
@@ -129,7 +135,7 @@ describe('My unit tests', () => {
 });
 ```
 ```javascript
-// unit-test-2.test.js
+// test/unit-test-2.test.js
 
 import {myOtherUtil} from './helpers/utils.js';
 
@@ -152,9 +158,11 @@ module.exports = function(config) {
 
     rollupPreprocessor: {
       options: {
-        sourcemap: true,
+        output: {
+          sourcemap: true,
+          format: 'iife'
+        },
         plugins: [globImport(), babel({presets: [['es2015', {modules: false}]]})]
-        format: 'iife',
       },
     },
   });
