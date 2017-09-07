@@ -32,14 +32,14 @@ export function waitFor(emitter, event, timeout = 30000) {
  * @return {Compiled} compiled code and source map.
  */
 export async function compile(file, options = {}) {
-  if (options.sourcemap) {
-    options.sourcemap = 'inline';
+  if (options.output.sourcemap) {
+    options.output.sourcemap = 'inline';
   }
   options.input = file;
-  const {code, map} = await (await rollup(options)).generate(options);
+  const {code, map} = await (await rollup(options)).generate(options.output);
 
   if (map) {
     map.file = path.basename(file);
   }
-  return {code: options.sourcemap ? `${code}\n//# sourceMappingURL=${map.toUrl()}\n` : code, map};
+  return {code: options.output.sourcemap ? `${code}\n//# sourceMappingURL=${map.toUrl()}\n` : code, map};
 }
