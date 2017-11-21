@@ -7,7 +7,7 @@ import {rollup} from 'rollup';
 
 /**
  * Rollup preprocessor factory.
- * 
+ *
  * @param {Object} args Config object of custom preprocessor.
  * @param {Object} [config={}] Karma's config.
  * @param {Object} logger Karma's logger.
