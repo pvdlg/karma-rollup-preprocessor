@@ -25,7 +25,7 @@ export function waitFor(emitter, event, timeout = 30000) {
 /* eslint-enable no-magic-numbers */
 /**
  * Compile a js file and return the result as a `string`.
- *  
+ *
  * @method compile
  * @param {string} file path of the file to compile.
  * @param {Object} [options={}] rollup options.
