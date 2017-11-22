@@ -10,8 +10,6 @@ branches:
   only:
     - master
     - /^greenkeeper.*$/
-git:
-  depth: 999
 before_install:
   - if [[ `npm -v` < 5* ]]; then npm install -g npm@5; fi
 install:
