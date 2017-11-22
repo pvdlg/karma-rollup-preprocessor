@@ -13,7 +13,6 @@ Karma preprocessor to compile js files with [rollup](https://github.com/rollup/r
 
 [![Travis](https://img.shields.io/travis/vanduynslagerp/karma-rollup-preprocessor.svg)](https://travis-ci.org/vanduynslagerp/karma-rollup-preprocessor)
 [![AppVeyor](https://img.shields.io/appveyor/ci/vanduynslagerp/karma-rollup-preprocessor.svg)](https://ci.appveyor.com/project/vanduynslagerp/karma-rollup-preprocessor)
-[![Code Climate](https://img.shields.io/codeclimate/github/vanduynslagerp/karma-rollup-preprocessor.svg)](https://codeclimate.com/github/vanduynslagerp/karma-rollup-preprocessor)
 [![Codecov](https://img.shields.io/codecov/c/github/vanduynslagerp/karma-rollup-preprocessor.svg)](https://codecov.io/gh/vanduynslagerp/karma-rollup-preprocessor)
 
 ## Installation
