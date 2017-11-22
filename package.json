@@ -2,7 +2,7 @@
   "name": "@metahub/karma-rollup-preprocessor",
   "description": "Karma preprocessor to bundle modules using Rollup with sourcemap and watch support",
   "version": "0.0.0-development",
-  "author": "Pierre Vanduynslager",
+  "author": "Pierre Vanduynslager (https://github.com/pvdlg)",
   "babel": {
     "presets": [
       [
@@ -16,7 +16,7 @@
     ]
   },
   "bugs": {
-    "url": "https://github.com/vanduynslagerp/karma-rollup-preprocessor/issues"
+    "url": "https://github.com/pvdlg/karma-rollup-preprocessor/issues"
   },
   "dependencies": {
     "chokidar": "^1.7.0",
@@ -58,7 +58,7 @@
   "files": [
     "lib"
   ],
-  "homepage": "https://github.com/vanduynslagerp/karma-rollup-preprocessor#readme",
+  "homepage": "https://github.com/pvdlg/karma-rollup-preprocessor#readme",
   "keywords": [
     "karma",
     "karma-plugin",
@@ -105,7 +105,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/vanduynslagerp/karma-rollup-preprocessor.git"
+    "url": "https://github.com/pvdlg/karma-rollup-preprocessor.git"
   },
   "scripts": {
     "codecov": "codecov -f coverage/coverage-final.json",
