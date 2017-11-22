@@ -86,7 +86,7 @@ function createServer(files, config, autoWatch, processorFactory) {
     Object.assign(KARMA_CONFIG, {
       files: Array.isArray(files) ? files : [files],
       rollupPreprocessor: config,
-      customPreprocessors: {custom_rollup: Object.assign({base: 'rollup'}, config)},
+      customPreprocessors: {custom_rollup: Object.assign({base: 'rollup'}, config)}, // eslint-disable-line camelcase
       singleRun: !autoWatch,
       autoWatch,
       plugins: ['karma-*', processorFactory],

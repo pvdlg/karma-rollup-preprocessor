@@ -47,10 +47,9 @@ export function mockFactory(autoWatch) {
           callback(null, emitter);
           return emitter;
         });
-      } else {
-        FSWatcher.returns(new EventEmitter());
-        return callback(null);
       }
+      FSWatcher.returns(new EventEmitter());
+      return callback(null);
     })(),
     FSWatcher,
   };
