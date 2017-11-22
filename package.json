@@ -18,8 +18,6 @@
     "nodeify": "^1.0.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^5.0.1",
-    "@commitlint/config-angular": "^4.3.0",
     "@metahub/cz-conventional-commit": "^2.0.0",
     "ava": "^0.23.0",
     "babel-cli": "^6.26.0",
@@ -116,7 +114,6 @@
     "clean": "rimraf coverage && rimraf .nyc_output",
     "cm": "git-cz",
     "codecov": "codecov",
-    "commitmsg": "commitlint -e",
     "compile": "rimraf lib && babel src --source-maps --out-dir lib",
     "coverage": "nyc check-coverage",
     "lint": "eslint src test package.json",
