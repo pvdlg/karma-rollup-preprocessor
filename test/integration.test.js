@@ -16,7 +16,7 @@ test.after(() => {
   stubWrite.restore();
 });
 
-test('Compile JS file', async t => {
+test.serial('Compile JS file', async t => {
   const {success, error, disconnected, errMsg} = await run('test/fixtures/basic.js', {
     options: {
       output: {format: 'umd'},
@@ -29,7 +29,7 @@ test('Compile JS file', async t => {
   t.is(success, 1, 'Expected 1 test successful');
 });
 
-test('Compile JS file with sourcemap and verify the reporter logs use the sourcemap', async t => {
+test.serial('Compile JS file with sourcemap and verify the reporter logs use the sourcemap', async t => {
   const {success, failed, error, disconnected} = await run('test/fixtures/falsy-assert.js', {
     options: {
       output: {sourcemap: true, format: 'umd'},
@@ -50,7 +50,7 @@ test('Compile JS file with sourcemap and verify the reporter logs use the source
   t.is(failed, 1, 'Expected 1 test to be failed');
 });
 
-test('Compile JS file with custom preprocessor', async t => {
+test.serial('Compile JS file with custom preprocessor', async t => {
   const {success, error, disconnected, errMsg} = await run('test/fixtures/basic.custom.js', {
     options: {
       output: {format: 'umd'},
@@ -63,7 +63,7 @@ test('Compile JS file with custom preprocessor', async t => {
   t.is(success, 1, 'Expected 1 test successful');
 });
 
-test('Log error on invalid JS file', async t => {
+test.serial('Log error on invalid JS file', async t => {
   const {error, disconnected, exitCode} = await run('test/fixtures/error.js');
 
   t.ifError(disconnected, 'Karma disconnected');
