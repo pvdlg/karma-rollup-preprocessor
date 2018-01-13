@@ -1,29 +1,33 @@
 language: node_js
+
 node_js:
+  - 9
   - 8
   - 6
   - 4
+
 os:
   - linux
   - osx
+
 branches:
   only:
     - master
     - /^greenkeeper.*$/
-before_install:
-  - if [[ `npm -v` < 5* ]]; then npm install -g npm@5; fi
+
 install:
   - travis_retry npm install
+
 script:
   - npm run test
-env:
-  - BUILD_LEADER_ID=7
+
+after_success:
+  - npm run codecov
+
 jobs:
   include:
     - stage: release
-      node_js: 8
+      node_js: lts/*
       os: linux
-      script: npm run test
-      after_success: 
-        - npm run codecov
+      script:
         - npm run semantic-release
