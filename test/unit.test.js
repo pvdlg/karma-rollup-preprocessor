@@ -201,7 +201,7 @@ test('Add dependency to watcher only once, even when its referenced multiple tim
   t.true(debug.secondCall.calledWith(match('Watching'), subModule));
   t.true(debug.thirdCall.calledWith(match('Watching'), module));
   t.true(watcher.add.firstCall.calledWith(match.array.deepEquals([subModule, module])));
-  debug.reset();
+  debug.resetHistory();
   await preprocessor(await readFile(otherFixture), otherFile);
   t.true(watcher.add.calledOnce);
   t.true(debug.calledOnce);
@@ -226,7 +226,7 @@ test('Add dependency to watcher only once if file is overwritten', async t => {
   t.true(debug.thirdCall.calledWith(match('Watching'), module));
   t.true(watcher.add.firstCall.calledWith(match.array.deepEquals([subModule, module])));
   t.true(watcher.add.calledOnce);
-  debug.reset();
+  debug.resetHistory();
   watcher.emit('add', subModule);
   await preprocessor(await readFile(fixture), file);
   t.false(refreshFiles.calledTwice);
@@ -257,7 +257,7 @@ test('Remove dependency from watcher if not referenced anymore', async t => {
   ]);
   await preprocessor(await readFile(fixture), file);
   watcher.add.reset();
-  debug.reset();
+  debug.resetHistory();
   await outputFile(
     fixture,
     (await readFile(fixture))
@@ -306,7 +306,7 @@ test('Do not remove dependency from watcher when unreferenced, if another file s
   await preprocessor(await readFile(fixture), file);
   await preprocessor(await readFile(otherFixture), otherFile);
   watcher.add.reset();
-  debug.reset();
+  debug.resetHistory();
   await outputFile(
     fixture,
     (await readFile(fixture))
@@ -357,7 +357,7 @@ test('Do not remove dependency from watcher when different files have differents
   );
   await preprocessor(await readFile(fixture), file);
   watcher.add.reset();
-  debug.reset();
+  debug.resetHistory();
   await preprocessor(await readFile(otherFixture), otherFile);
   t.true(watcher.add.calledOnce);
   t.true(watcher.unwatch.notCalled);
