@@ -78,7 +78,7 @@ function createRollupPreprocessor(args, config, logger, server) {
             const stopWatching = [];
 
             for (let i = 0, {length} = bundle.modules; i < length; i++) {
-              if (bundle.modules[i].id !== fullPath) {
+              if (bundle.modules[i].id !== fullPath && !bundle.modules[i].id.startsWith('\u0000')) {
                 includedFiles.push(bundle.modules[i].id);
                 if (!dependencies[bundle.modules[i].id]) {
                   startWatching.push(bundle.modules[i].id);
