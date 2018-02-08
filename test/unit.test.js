@@ -256,7 +256,7 @@ test('Remove dependency from watcher if not referenced anymore', async t => {
     copy('test/fixtures/basic.js', fixture),
   ]);
   await preprocessor(await readFile(fixture), file);
-  watcher.add.reset();
+  watcher.add.resetHistory();
   debug.resetHistory();
   await outputFile(
     fixture,
@@ -305,7 +305,7 @@ test('Do not remove dependency from watcher when unreferenced, if another file s
   ]);
   await preprocessor(await readFile(fixture), file);
   await preprocessor(await readFile(otherFixture), otherFile);
-  watcher.add.reset();
+  watcher.add.resetHistory();
   debug.resetHistory();
   await outputFile(
     fixture,
@@ -356,7 +356,7 @@ test('Do not remove dependency from watcher when different files have differents
       .replace(`import test from './modules/module';`, `import test from './modules/module-alt';`)
   );
   await preprocessor(await readFile(fixture), file);
-  watcher.add.reset();
+  watcher.add.resetHistory();
   debug.resetHistory();
   await preprocessor(await readFile(otherFixture), otherFile);
   t.true(watcher.add.calledOnce);
@@ -425,8 +425,8 @@ test('Call refreshFiles when dependency is deleted and added', async t => {
   t.true(info.firstCall.calledWith(match('Deleted file'), path.resolve(module)));
   t.true(info.calledOnce);
   t.true(refreshFiles.calledOnce);
-  info.reset();
-  refreshFiles.reset();
+  info.resetHistory();
+  refreshFiles.resetHistory();
   await t.throws(preprocessor(await readFile(fixture), file), Error);
   const cpy = waitFor(watcher, 'add');
 
