@@ -106,7 +106,7 @@ export async function waitForRunComplete(server) {
   try {
     const [, result] = await pEvent(server, 'run_complete', {
       multiArgs: true,
-      timeout: 10000,
+      timeout: 30000,
       rejectionEvents: ['browser_error'],
     });
 
