@@ -31,28 +31,28 @@ import pify from 'pify';
  * @return {MockFactory} mocked preprocessor factory and watcher.
  */
 export function mockFactory(autoWatch) {
-  const FSWatcher = stub();
+	const FSWatcher = stub();
 
-  return {
-    factory: proxyquire('../../lib/index', {chokidar: {FSWatcher}}),
-    watcher: pify(callback => {
-      if (autoWatch) {
-        return FSWatcher.callsFake(() => {
-          const emitter = new EventEmitter();
-          const add = spy();
-          const unwatch = spy();
+	return {
+		factory: proxyquire('../../lib/index', {chokidar: {FSWatcher}}),
+		watcher: pify(callback => {
+			if (autoWatch) {
+				return FSWatcher.callsFake(() => {
+					const emitter = new EventEmitter();
+					const add = spy();
+					const unwatch = spy();
 
-          emitter.add = add;
-          emitter.unwatch = unwatch;
-          callback(null, emitter);
-          return emitter;
-        });
-      }
-      FSWatcher.returns(new EventEmitter());
-      return callback(null);
-    })(),
-    FSWatcher,
-  };
+					emitter.add = add;
+					emitter.unwatch = unwatch;
+					callback(null, emitter);
+					return emitter;
+				});
+			}
+			FSWatcher.returns(new EventEmitter());
+			return callback(null);
+		})(),
+		FSWatcher,
+	};
 }
 
 /**
@@ -64,23 +64,23 @@ export function mockFactory(autoWatch) {
  * @return {MockPreprocessor} mocked preprocessor function and spies.
  */
 export async function mockPreprocessor(args = {}, config = {}) {
-  const debug = spy();
-  const error = spy();
-  const info = spy();
-  const refreshFiles = spy();
-  const {factory, watcher, FSWatcher} = mockFactory(config.autoWatch);
-  const preprocessor = pify(
-    factory['preprocessor:rollup'][1](
-      args,
-      config,
-      {
-        create() {
-          return {debug, error, info};
-        },
-      },
-      {refreshFiles}
-    )
-  );
+	const debug = spy();
+	const error = spy();
+	const info = spy();
+	const refreshFiles = spy();
+	const {factory, watcher, FSWatcher} = mockFactory(config.autoWatch);
+	const preprocessor = pify(
+		factory['preprocessor:rollup'][1](
+			args,
+			config,
+			{
+				create() {
+					return {debug, error, info};
+				},
+			},
+			{refreshFiles}
+		)
+	);
 
-  return {preprocessor, debug, error, info, refreshFiles, watcher: await watcher, FSWatcher};
+	return {preprocessor, debug, error, info, refreshFiles, watcher: await watcher, FSWatcher};
 }

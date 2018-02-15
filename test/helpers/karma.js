@@ -1,7 +1,7 @@
 import pEvent from 'p-event';
 import tempDir from 'temp-dir';
 import {Server, constants} from 'karma';
-import karmaPreprocessor from '../../lib/index';
+import karmaPreprocessor from '../../lib';
 import {mockFactory} from './mock';
 
 /**
@@ -10,17 +10,17 @@ import {mockFactory} from './mock';
  * @type {Object}
  */
 const KARMA_CONFIG = {
-  basePath: '',
-  frameworks: ['jasmine'],
-  preprocessors: {
-    'test/fixtures/**/!(*custom).js': ['rollup'],
-    'test/fixtures/**/*custom.js': ['custom_rollup'],
-    [`${tempDir}/**/!(*custom).js`]: ['rollup'],
-    [`${tempDir}/**/*custom.js`]: ['custom_rollup'],
-  },
-  colors: true,
-  logLevel: constants.LOG_DISABLE,
-  browsers: ['PhantomJS'],
+	basePath: '',
+	frameworks: ['jasmine'],
+	preprocessors: {
+		'test/fixtures/**/!(*custom).js': ['rollup'],
+		'test/fixtures/**/*custom.js': ['custom_rollup'],
+		[`${tempDir}/**/!(*custom).js`]: ['rollup'],
+		[`${tempDir}/**/*custom.js`]: ['custom_rollup'],
+	},
+	colors: true,
+	logLevel: constants.LOG_DISABLE,
+	browsers: ['PhantomJS'],
 };
 
 /**
@@ -45,11 +45,11 @@ const KARMA_CONFIG = {
  * @return {Promise<KarmaOutput>} A `Promise` that resolve to the Karma execution results.
  */
 export function run(files, config) {
-  const server = createServer(files, config, false, karmaPreprocessor);
-  const result = waitForRunComplete(server);
+	const server = createServer(files, config, false, karmaPreprocessor);
+	const result = waitForRunComplete(server);
 
-  server.start();
-  return result;
+	server.start();
+	return result;
 }
 
 /**
@@ -64,11 +64,11 @@ export function run(files, config) {
  * @return {Server} The started Karma Server.
  */
 export async function watch(files, config) {
-  const {factory, watcher} = mockFactory(true);
-  const server = createServer(files, config, true, factory);
+	const {factory, watcher} = mockFactory(true);
+	const server = createServer(files, config, true, factory);
 
-  server.start();
-  return {server, watcher: await watcher};
+	server.start();
+	return {server, watcher: await watcher};
 }
 
 /**
@@ -82,17 +82,17 @@ export async function watch(files, config) {
  * @return {Server} the configured Karma Server.
  */
 function createServer(files, config, autoWatch, processorFactory) {
-  return new Server(
-    Object.assign(KARMA_CONFIG, {
-      files: Array.isArray(files) ? files : [files],
-      rollupPreprocessor: config,
-      customPreprocessors: {custom_rollup: Object.assign({base: 'rollup'}, config)}, // eslint-disable-line camelcase
-      singleRun: !autoWatch,
-      autoWatch,
-      plugins: ['karma-*', processorFactory],
-    }),
-    () => 0
-  );
+	return new Server(
+		Object.assign(KARMA_CONFIG, {
+			files: Array.isArray(files) ? files : [files],
+			rollupPreprocessor: config,
+			customPreprocessors: {custom_rollup: Object.assign({base: 'rollup'}, config)}, // eslint-disable-line camelcase
+			singleRun: !autoWatch,
+			autoWatch,
+			plugins: ['karma-*', processorFactory],
+		}),
+		() => 0
+	);
 }
 
 /**
@@ -103,20 +103,20 @@ function createServer(files, config, autoWatch, processorFactory) {
  * @return {Promise<KarmaOutput>} A `Promise` that resolve to the Karma execution results.
  */
 export async function waitForRunComplete(server) {
-  try {
-    const [, result] = await pEvent(server, 'run_complete', {
-      multiArgs: true,
-      timeout: 30000,
-      rejectionEvents: ['browser_error'],
-    });
+	try {
+		const [, result] = await pEvent(server, 'run_complete', {
+			multiArgs: true,
+			timeout: 30000,
+			rejectionEvents: ['browser_error'],
+		});
 
-    return result;
-  } catch (err) {
-    if (Array.isArray(err)) {
-      const [{lastResult: {success, failed, error, disconnected}}, errMsg] = err;
+		return result;
+	} catch (err) {
+		if (Array.isArray(err)) {
+			const [{lastResult: {success, failed, error, disconnected}}, errMsg] = err;
 
-      return {success, failed, error, disconnected, exitCode: 1, errMsg};
-    }
-    throw err;
-  }
+			return {success, failed, error, disconnected, exitCode: 1, errMsg};
+		}
+		throw err;
+	}
 }
