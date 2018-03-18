@@ -60,6 +60,7 @@ function createRollupPreprocessor(args, config, logger, server) {
 		if (opts.sourcemap || opts.output.sourcemap) {
 			opts.output.sourcemap = 'inline';
 		}
+		delete opts.sourcemap;
 		opts.input = file.originalPath;
 		opts.cache = cache;
 

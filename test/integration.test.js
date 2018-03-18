@@ -40,7 +40,7 @@ test.serial('Compile JS file with sourcemap and verify the reporter logs use the
 	t.true(
 		stubWrite.calledWith(
 			match(
-				/[\s\S]*(Expected false to be truthy)[\s\S]*(test\/fixtures\/falsy-assert\.js:7:4 <- test\/fixtures\/falsy-assert\.js:20:29)[\s\S]*/g
+				/[\s\S]*(Expected false to be truthy)[\s\S]*(test\/fixtures\/falsy-assert\.js:\d+:\d+ <- test\/fixtures\/falsy-assert\.js:\d+:\d+)[\s\S]*/g
 			)
 		)
 	);
