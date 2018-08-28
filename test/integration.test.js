@@ -20,7 +20,7 @@ test.serial('Compile JS file', async t => {
 	const {success, error, disconnected, errMsg} = await run('test/fixtures/basic.js', {
 		options: {
 			output: {format: 'umd'},
-			plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
+			plugins: [babel({babelrc: false, presets: [[require.resolve('@babel/preset-env'), {modules: false}]]})],
 		},
 	});
 
@@ -33,7 +33,7 @@ test.serial('Compile JS file with sourcemap and verify the reporter logs use the
 	const {success, failed, error, disconnected} = await run('test/fixtures/falsy-assert.js', {
 		options: {
 			output: {sourcemap: true, format: 'umd'},
-			plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
+			plugins: [babel({babelrc: false, presets: [[require.resolve('@babel/preset-env'), {modules: false}]]})],
 		},
 	});
 
@@ -54,7 +54,7 @@ test.serial('Compile JS file with custom preprocessor', async t => {
 	const {success, error, disconnected, errMsg} = await run('test/fixtures/basic.custom.js', {
 		options: {
 			output: {format: 'umd'},
-			plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
+			plugins: [babel({babelrc: false, presets: [[require.resolve('@babel/preset-env'), {modules: false}]]})],
 		},
 	});
 
@@ -87,7 +87,7 @@ test('Re-compile JS file when dependency is modified', async t => {
 	const {server, watcher} = await watch([fixture.replace('fixtures', '*').replace('basic', '+(basic|nomatch)')], {
 		options: {
 			output: {format: 'umd'},
-			plugins: [babel({babelrc: false, presets: [[require.resolve('babel-preset-es2015'), {modules: false}]]})],
+			plugins: [babel({babelrc: false, presets: [[require.resolve('@babel/preset-env'), {modules: false}]]})],
 		},
 	});
 
