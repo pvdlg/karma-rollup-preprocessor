@@ -123,9 +123,9 @@ function createRollupPreprocessor(args, config, logger, server) {
 					}
 					return generated.code;
 				})
-				.catch(err => {
-					log.error('Failed to process %s\n%s\n', file.originalPath, err.message);
-					throw err;
+				.catch(error => {
+					log.error('Failed to process %s\n%s\n', file.originalPath, error.message);
+					throw error;
 				}),
 			done
 		);
