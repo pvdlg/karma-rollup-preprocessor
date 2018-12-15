@@ -3,6 +3,13 @@
   "description": "Karma preprocessor to bundle modules using Rollup with sourcemap and watch support",
   "version": "0.0.0-development",
   "author": "Pierre Vanduynslager (https://github.com/pvdlg)",
+  "ava": {
+    "babel": {
+      "testOptions": {
+        "babelrc": false
+      }
+    }
+  },
   "babel": {
     "presets": [
       [
@@ -25,7 +32,7 @@
     "nodeify": "^1.0.1"
   },
   "devDependencies": {
-    "ava": "^0.25.0",
+    "ava": "^1.0.1",
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
