@@ -93,7 +93,7 @@ test('Log error on invalid JS file', async t => {
 	const fixture = 'test/fixtures/error.js';
 	const {preprocessor, debug, error} = await mockPreprocessor();
 	const file = {originalPath: fixture};
-	const err = await t.throws(preprocessor(await readFile(fixture), file), Error);
+	const err = await t.throwsAsync(preprocessor(await readFile(fixture), file), Error);
 
 	t.true(debug.firstCall.calledWith(match('Processing'), fixture));
 	t.true(err.message.includes('Could not resolve'));
@@ -427,7 +427,7 @@ test('Call refreshFiles when dependency is deleted and added', async t => {
 	t.true(refreshFiles.calledOnce);
 	info.resetHistory();
 	refreshFiles.resetHistory();
-	await t.throws(preprocessor(await readFile(fixture), file), Error);
+	await t.throwsAsync(preprocessor(await readFile(fixture), file), Error);
 	const cpy = waitFor(watcher, 'add');
 
 	await copy('test/fixtures/modules/module.js', module);
