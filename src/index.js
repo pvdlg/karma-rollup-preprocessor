@@ -77,16 +77,19 @@ function createRollupPreprocessor(args, config, logger, server) {
 						const includedFiles = [];
 						const startWatching = [];
 						const stopWatching = [];
+						const {
+							cache: {modules},
+						} = bundle;
 
-						for (let i = 0, {length} = bundle.modules; i < length; i++) {
-							if (bundle.modules[i].id !== fullPath && !bundle.modules[i].id.startsWith('\u0000')) {
-								includedFiles.push(bundle.modules[i].id);
-								if (!dependencies[bundle.modules[i].id]) {
-									startWatching.push(bundle.modules[i].id);
-									log.debug('Watching "%s"', bundle.modules[i].id);
-									dependencies[bundle.modules[i].id] = [fullPath];
-								} else if (dependencies[bundle.modules[i].id].indexOf(fullPath) === -1) {
-									dependencies[bundle.modules[i].id].push(fullPath);
+						for (let i = 0, {length} = modules; i < length; i++) {
+							if (modules[i].id !== fullPath && !modules[i].id.startsWith('\u0000')) {
+								includedFiles.push(modules[i].id);
+								if (!dependencies[modules[i].id]) {
+									startWatching.push(modules[i].id);
+									log.debug('Watching "%s"', modules[i].id);
+									dependencies[modules[i].id] = [fullPath];
+								} else if (dependencies[modules[i].id].indexOf(fullPath) === -1) {
+									dependencies[modules[i].id].push(fullPath);
 								}
 							}
 						}
@@ -115,13 +118,13 @@ function createRollupPreprocessor(args, config, logger, server) {
 					cache = bundle;
 					return bundle.generate(opts.output);
 				})
-				.then(generated => {
-					if (opts.output.sourcemap && generated.map) {
-						generated.map.file = path.basename(file.path);
-						file.sourceMap = generated.map;
-						return `${generated.code}\n//# sourceMappingURL=${generated.map.toUrl()}\n`;
+				.then(({output: [{code, map}]}) => {
+					if (opts.output.sourcemap && map) {
+						map.file = path.basename(file.path);
+						file.sourceMap = map;
+						return `${code}\n//# sourceMappingURL=${map.toUrl()}\n`;
 					}
-					return generated.code;
+					return code;
 				})
 				.catch(error => {
 					log.error('Failed to process %s\n%s\n', file.originalPath, error.message);

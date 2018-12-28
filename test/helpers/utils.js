@@ -36,7 +36,9 @@ export async function compile(file, options = {}) {
 		options.output.sourcemap = 'inline';
 	}
 	options.input = file;
-	const {code, map} = await (await rollup(options)).generate(options.output);
+	const {
+		output: [{code, map}],
+	} = await (await rollup(options)).generate(options.output);
 
 	if (map) {
 		map.file = path.basename(file);
