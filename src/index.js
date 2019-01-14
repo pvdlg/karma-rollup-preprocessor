@@ -56,10 +56,12 @@ function createRollupPreprocessor(args, config, logger, server) {
 		if (!opts.output) {
 			opts.output = {};
 		}
+
 		// Inline source maps
 		if (opts.sourcemap || opts.output.sourcemap) {
 			opts.output.sourcemap = 'inline';
 		}
+
 		delete opts.sourcemap;
 		opts.input = file.originalPath;
 		opts.cache = cache;
@@ -93,6 +95,7 @@ function createRollupPreprocessor(args, config, logger, server) {
 								}
 							}
 						}
+
 						for (let i = 0, keys = Object.keys(dependencies), {length} = keys; i < length; i++) {
 							if (includedFiles.indexOf(keys[i]) === -1) {
 								const index = dependencies[keys[i]].indexOf(fullPath);
@@ -111,10 +114,12 @@ function createRollupPreprocessor(args, config, logger, server) {
 						if (startWatching.length > 0) {
 							watcher.add(startWatching);
 						}
+
 						if (stopWatching.length > 0) {
 							watcher.unwatch(stopWatching);
 						}
 					}
+
 					cache = bundle;
 					return bundle.generate(opts.output);
 				})
@@ -124,6 +129,7 @@ function createRollupPreprocessor(args, config, logger, server) {
 						file.sourceMap = map;
 						return `${code}\n//# sourceMappingURL=${map.toUrl()}\n`;
 					}
+
 					return code;
 				})
 				.catch(error => {
