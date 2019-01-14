@@ -2,7 +2,6 @@ import path from 'path';
 import pEvent from 'p-event';
 import {rollup} from 'rollup';
 
-/* eslint-disable no-magic-numbers */
 /**
  * Return a Promise that resolve when an event is emitted and reject after a timeout expire if the event is not emitted.
  *
@@ -22,7 +21,6 @@ export function waitFor(emitter, event, timeout = 30000) {
  * @property {Object} map the sourcemap resulting from the compilation.
  */
 
-/* eslint-enable no-magic-numbers */
 /**
  * Compile a js file and return the result as a `string`.
  *
@@ -35,6 +33,7 @@ export async function compile(file, options = {}) {
 	if (options.output.sourcemap) {
 		options.output.sourcemap = 'inline';
 	}
+
 	options.input = file;
 	const {
 		output: [{code, map}],
@@ -43,5 +42,6 @@ export async function compile(file, options = {}) {
 	if (map) {
 		map.file = path.basename(file);
 	}
+
 	return {code: options.output.sourcemap ? `${code}\n//# sourceMappingURL=${map.toUrl()}\n` : code, map};
 }
