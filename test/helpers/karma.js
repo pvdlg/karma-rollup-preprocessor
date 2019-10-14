@@ -112,18 +112,11 @@ export async function waitForRunComplete(server) {
 
 		return result;
 	} catch (error) {
-		if (Array.isArray(error)) {
-			console.log(error);
-			const [
-				{
-					lastResult: {success, failed, error: err, disconnected},
-				},
-				errMsg,
-			] = error;
+		console.log(error);
+		const {
+			lastResult: {success, failed, error: err, disconnected},
+		} = error;
 
-			return {success, failed, error: err, disconnected, exitCode: 1, errMsg};
-		}
-
-		throw error;
+		return {success, failed, error: err, disconnected, exitCode: 1};
 	}
 }

@@ -17,14 +17,14 @@ test.after(() => {
 });
 
 test.serial('Compile JS file', async t => {
-	const {success, error, disconnected, errMsg} = await run('test/fixtures/basic.js', {
+	const {success, error, disconnected} = await run('test/fixtures/basic.js', {
 		options: {
 			output: {format: 'umd'},
 			plugins: [babel({babelrc: false, presets: [[require.resolve('@babel/preset-env'), {modules: false}]]})],
 		},
 	});
 
-	t.falsy(error, `Karma returned the error: ${errMsg}`);
+	t.falsy(error, `Karma returned an error`);
 	t.falsy(disconnected, 'Karma disconnected');
 	t.is(success, 1, 'Expected 1 test successful');
 });
@@ -51,14 +51,14 @@ test.serial('Compile JS file with sourcemap and verify the reporter logs use the
 });
 
 test.serial('Compile JS file with custom preprocessor', async t => {
-	const {success, error, disconnected, errMsg} = await run('test/fixtures/basic.custom.js', {
+	const {success, error, disconnected} = await run('test/fixtures/basic.custom.js', {
 		options: {
 			output: {format: 'umd'},
 			plugins: [babel({babelrc: false, presets: [[require.resolve('@babel/preset-env'), {modules: false}]]})],
 		},
 	});
 
-	t.falsy(error, `Karma returned the error: ${errMsg}`);
+	t.falsy(error, `Karma returned an error`);
 	t.falsy(disconnected, 'Karma disconnected');
 	t.is(success, 1, 'Expected 1 test successful');
 });
@@ -92,15 +92,15 @@ test('Re-compile JS file when dependency is modified', async t => {
 	});
 
 	try {
-		let {success, error, disconnected, errMsg} = await waitForRunComplete(server);
+		let {success, error, disconnected} = await waitForRunComplete(server);
 
-		t.falsy(error, `Karma returned the error: ${errMsg}`);
+		t.falsy(error, `Karma returned an error`);
 		t.falsy(disconnected, 'Karma disconnected');
 		t.is(success, 1, 'Expected 1 test successful');
 		watcher.emit('change', module);
-		({success, error, disconnected, errMsg} = await waitForRunComplete(server));
+		({success, error, disconnected} = await waitForRunComplete(server));
 
-		t.falsy(error, `Karma returned the error: ${errMsg}`);
+		t.falsy(error, `Karma returned an error`);
 		t.falsy(disconnected, 'Karma disconnected');
 		t.is(success, 1, 'Expected 1 test successful');
 	} finally {
