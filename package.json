@@ -26,7 +26,7 @@
     "url": "https://github.com/pvdlg/karma-rollup-preprocessor/issues"
   },
   "dependencies": {
-    "chokidar": "^2.0.0",
+    "chokidar": "^3.2.2",
     "lodash": "^4.17.4",
     "minimatch": "^3.0.4",
     "nodeify": "^1.0.1"
