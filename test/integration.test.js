@@ -30,7 +30,7 @@ test.serial('Compile JS file', async t => {
 });
 
 test.serial('Compile JS file with sourcemap and verify the reporter logs use the sourcemap', async t => {
-	const {success, failed, error, disconnected} = await run('test/fixtures/falsy-assert.js', {
+	const {success, failed, disconnected} = await run('test/fixtures/falsy-assert.js', {
 		options: {
 			output: {sourcemap: true, format: 'umd'},
 			plugins: [babel({babelrc: false, presets: [[require.resolve('@babel/preset-env'), {modules: false}]]})],
@@ -44,8 +44,8 @@ test.serial('Compile JS file with sourcemap and verify the reporter logs use the
 			)
 		)
 	);
+
 	t.falsy(disconnected, 'Karma disconnected');
-	t.true(error, 'Expected an error to be returned');
 	t.is(success, 0, 'Expected 0 test successful');
 	t.is(failed, 1, 'Expected 1 test to be failed');
 });

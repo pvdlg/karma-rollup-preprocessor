@@ -16,7 +16,7 @@
         "@babel/preset-env",
         {
           "targets": {
-            "node": "6"
+            "node": "8.16"
           }
         }
       ]
@@ -57,7 +57,7 @@
     "xo": "^0.24.0"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=8.16"
   },
   "files": [
     "lib"
