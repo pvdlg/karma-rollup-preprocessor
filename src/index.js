@@ -51,7 +51,7 @@ function createRollupPreprocessor(args, config, logger, server) {
 		file.path = transformPath(file.originalPath);
 
 		// Clone the options because we need to mutate them
-		const opts = Object.assign({}, options);
+		const opts = {...options};
 
 		if (!opts.output) {
 			opts.output = {};
@@ -67,8 +67,10 @@ function createRollupPreprocessor(args, config, logger, server) {
 		opts.cache = cache;
 
 		nodeify(
-			rollup(opts)
-				.then(bundle => {
+			(async () => {
+				try {
+					const bundle = await rollup(opts);
+
 					if (
 						config.autoWatch &&
 						config.files.find(
@@ -121,9 +123,10 @@ function createRollupPreprocessor(args, config, logger, server) {
 					}
 
 					cache = bundle;
-					return bundle.generate(opts.output);
-				})
-				.then(({output: [{code, map}]}) => {
+					const {
+						output: [{code, map}],
+					} = await bundle.generate(opts.output);
+
 					if (opts.output.sourcemap && map) {
 						map.file = path.basename(file.path);
 						file.sourceMap = map;
@@ -131,11 +134,11 @@ function createRollupPreprocessor(args, config, logger, server) {
 					}
 
 					return code;
-				})
-				.catch(error => {
+				} catch (error) {
 					log.error('Failed to process %s\n%s\n', file.originalPath, error.message);
 					throw error;
-				}),
+				}
+			})(),
 			done
 		);
 	};
