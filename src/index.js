@@ -34,7 +34,7 @@ function createRollupPreprocessor(args, config, logger, server) {
 				server.refreshFiles();
 			})
 			.on('add', filePath => {
-				if (unlinked.indexOf(filePath) !== -1) {
+				if (unlinked.includes(filePath)) {
 					log.info('Added file "%s".', filePath);
 					server.refreshFiles();
 				}
@@ -92,14 +92,14 @@ function createRollupPreprocessor(args, config, logger, server) {
 									startWatching.push(modules[i].id);
 									log.debug('Watching "%s"', modules[i].id);
 									dependencies[modules[i].id] = [fullPath];
-								} else if (dependencies[modules[i].id].indexOf(fullPath) === -1) {
+								} else if (!dependencies[modules[i].id].includes(fullPath)) {
 									dependencies[modules[i].id].push(fullPath);
 								}
 							}
 						}
 
 						for (let i = 0, keys = Object.keys(dependencies), {length} = keys; i < length; i++) {
-							if (includedFiles.indexOf(keys[i]) === -1) {
+							if (!includedFiles.includes(keys[i])) {
 								const index = dependencies[keys[i]].indexOf(fullPath);
 
 								if (index !== -1) {
