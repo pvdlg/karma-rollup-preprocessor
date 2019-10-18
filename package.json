@@ -8,7 +8,16 @@
       "testOptions": {
         "babelrc": false
       }
-    }
+    },
+    "helpers": [
+      "test/helpers/**/*"
+    ],
+    "files": [
+      "test/**/*.test.js"
+    ],
+    "sources": [
+      "src/**/*"
+    ]
   },
   "babel": {
     "presets": [
@@ -32,10 +41,10 @@
     "nodeify": "^1.0.1"
   },
   "devDependencies": {
-    "ava": "^1.0.1",
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
+    "ava": "^2.4.0",
     "codecov": "^3.0.0",
     "conventional-changelog-metahub": "^3.0.0",
     "fs-extra": "^8.0.0",
