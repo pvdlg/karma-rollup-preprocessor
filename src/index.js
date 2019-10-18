@@ -34,7 +34,7 @@ function createRollupPreprocessor(args, config, logger, server) {
 				server.refreshFiles();
 			})
 			.on('add', filePath => {
-				if (unlinked.indexOf(filePath) !== -1) {
+				if (unlinked.includes(filePath)) {
 					log.info('Added file "%s".', filePath);
 					server.refreshFiles();
 				}
@@ -51,22 +51,26 @@ function createRollupPreprocessor(args, config, logger, server) {
 		file.path = transformPath(file.originalPath);
 
 		// Clone the options because we need to mutate them
-		const opts = Object.assign({}, options);
+		const opts = {...options};
 
 		if (!opts.output) {
 			opts.output = {};
 		}
+
 		// Inline source maps
 		if (opts.sourcemap || opts.output.sourcemap) {
 			opts.output.sourcemap = 'inline';
 		}
+
 		delete opts.sourcemap;
 		opts.input = file.originalPath;
 		opts.cache = cache;
 
 		nodeify(
-			rollup(opts)
-				.then(bundle => {
+			(async () => {
+				try {
+					const bundle = await rollup(opts);
+
 					if (
 						config.autoWatch &&
 						config.files.find(
@@ -88,13 +92,14 @@ function createRollupPreprocessor(args, config, logger, server) {
 									startWatching.push(modules[i].id);
 									log.debug('Watching "%s"', modules[i].id);
 									dependencies[modules[i].id] = [fullPath];
-								} else if (dependencies[modules[i].id].indexOf(fullPath) === -1) {
+								} else if (!dependencies[modules[i].id].includes(fullPath)) {
 									dependencies[modules[i].id].push(fullPath);
 								}
 							}
 						}
+
 						for (let i = 0, keys = Object.keys(dependencies), {length} = keys; i < length; i++) {
-							if (includedFiles.indexOf(keys[i]) === -1) {
+							if (!includedFiles.includes(keys[i])) {
 								const index = dependencies[keys[i]].indexOf(fullPath);
 
 								if (index !== -1) {
@@ -111,25 +116,29 @@ function createRollupPreprocessor(args, config, logger, server) {
 						if (startWatching.length > 0) {
 							watcher.add(startWatching);
 						}
+
 						if (stopWatching.length > 0) {
 							watcher.unwatch(stopWatching);
 						}
 					}
+
 					cache = bundle;
-					return bundle.generate(opts.output);
-				})
-				.then(({output: [{code, map}]}) => {
+					const {
+						output: [{code, map}],
+					} = await bundle.generate(opts.output);
+
 					if (opts.output.sourcemap && map) {
 						map.file = path.basename(file.path);
 						file.sourceMap = map;
 						return `${code}\n//# sourceMappingURL=${map.toUrl()}\n`;
 					}
+
 					return code;
-				})
-				.catch(error => {
+				} catch (error) {
 					log.error('Failed to process %s\n%s\n', file.originalPath, error.message);
 					throw error;
-				}),
+				}
+			})(),
 			done
 		);
 	};

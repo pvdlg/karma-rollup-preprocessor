@@ -123,9 +123,9 @@ test('Add dependency to watcher', async t => {
 	const file = {originalPath: fixture};
 
 	await preprocessor(await readFile(fixture), file);
-	t.true(debug.secondCall.calledWith(match('Watching'), module));
-	t.true(debug.thirdCall.calledWith(match('Watching'), subModule));
-	t.true(watcher.add.firstCall.calledWith(match.array.deepEquals([module, subModule])));
+	t.true(debug.secondCall.calledWith(match('Watching'), subModule));
+	t.true(debug.thirdCall.calledWith(match('Watching'), module));
+	t.true(watcher.add.firstCall.calledWith(match.array.deepEquals([subModule, module])));
 	t.true(watcher.add.calledOnce);
 });
 
@@ -145,9 +145,9 @@ test('Add dependency to watcher for file added with glob', async t => {
 	const file = {originalPath: fixture};
 
 	await preprocessor(await readFile(fixture), file);
-	t.true(debug.secondCall.calledWith(match('Watching'), module));
-	t.true(debug.thirdCall.calledWith(match('Watching'), subModule));
-	t.true(watcher.add.firstCall.calledWith(match.array.deepEquals([module, subModule])));
+	t.true(debug.secondCall.calledWith(match('Watching'), subModule));
+	t.true(debug.thirdCall.calledWith(match('Watching'), module));
+	t.true(watcher.add.firstCall.calledWith(match.array.deepEquals([subModule, module])));
 	t.true(watcher.add.calledOnce);
 });
 
@@ -198,9 +198,9 @@ test('Add dependency to watcher only once, even when its referenced multiple tim
 		copy('test/fixtures/basic.js', otherFixture),
 	]);
 	await preprocessor(await readFile(fixture), file);
-	t.true(debug.secondCall.calledWith(match('Watching'), module));
-	t.true(debug.thirdCall.calledWith(match('Watching'), subModule));
-	t.true(watcher.add.firstCall.calledWith(match.array.deepEquals([module, subModule])));
+	t.true(debug.secondCall.calledWith(match('Watching'), subModule));
+	t.true(debug.thirdCall.calledWith(match('Watching'), module));
+	t.true(watcher.add.firstCall.calledWith(match.array.deepEquals([subModule, module])));
 	debug.resetHistory();
 	await preprocessor(await readFile(otherFixture), otherFile);
 	t.true(watcher.add.calledOnce);
@@ -222,9 +222,9 @@ test('Add dependency to watcher only once if file is overwritten', async t => {
 	const file = {originalPath: fixture};
 
 	await preprocessor(await readFile(fixture), file);
-	t.true(debug.secondCall.calledWith(match('Watching'), module));
-	t.true(debug.thirdCall.calledWith(match('Watching'), subModule));
-	t.true(watcher.add.firstCall.calledWith(match.array.deepEquals([module, subModule])));
+	t.true(debug.secondCall.calledWith(match('Watching'), subModule));
+	t.true(debug.thirdCall.calledWith(match('Watching'), module));
+	t.true(watcher.add.firstCall.calledWith(match.array.deepEquals([subModule, module])));
 	t.true(watcher.add.calledOnce);
 	debug.resetHistory();
 	watcher.emit('add', subModule);

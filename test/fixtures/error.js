@@ -1,5 +1,4 @@
 /* eslint-env jasmine */
-// eslint-disable-next-line import/no-unresolved, node/no-missing-import
 import test from './modules/module_2';
 
 describe('JS module', () => {

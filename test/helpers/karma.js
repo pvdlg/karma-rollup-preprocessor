@@ -86,7 +86,7 @@ function createServer(files, config, autoWatch, processorFactory) {
 		Object.assign(KARMA_CONFIG, {
 			files: Array.isArray(files) ? files : [files],
 			rollupPreprocessor: config,
-			customPreprocessors: {custom_rollup: Object.assign({base: 'rollup'}, config)}, // eslint-disable-line camelcase
+			customPreprocessors: {custom_rollup: {base: 'rollup', ...config}}, // eslint-disable-line camelcase
 			singleRun: !autoWatch,
 			autoWatch,
 			plugins: ['karma-*', processorFactory],
@@ -112,17 +112,11 @@ export async function waitForRunComplete(server) {
 
 		return result;
 	} catch (error) {
-		if (Array.isArray(error)) {
-			console.log(error);
-			const [
-				{
-					lastResult: {success, failed, error: err, disconnected},
-				},
-				errMsg,
-			] = error;
+		console.log(error);
+		const {
+			lastResult: {success, failed, error: err, disconnected},
+		} = error;
 
-			return {success, failed, error: err, disconnected, exitCode: 1, errMsg};
-		}
-		throw error;
+		return {success, failed, error: err, disconnected, exitCode: 1};
 	}
 }
