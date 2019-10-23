@@ -34,7 +34,7 @@ export function mockFactory(autoWatch) {
 	const FSWatcher = stub();
 
 	return {
-		factory: proxyquire('../../lib/index', {chokidar: {FSWatcher}}),
+		factory: proxyquire('../..', {chokidar: {FSWatcher}}),
 		watcher: pify(callback => {
 			if (autoWatch) {
 				return FSWatcher.callsFake(() => {
