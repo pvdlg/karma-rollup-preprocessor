@@ -25,7 +25,6 @@
     "@babel/preset-env": "^7.0.0",
     "ava": "^2.4.0",
     "codecov": "^3.0.0",
-    "conventional-changelog-metahub": "^3.0.0",
     "fs-extra": "^8.0.0",
     "jasmine-core": "^3.0.0",
     "karma": "^4.4.1",
@@ -82,15 +81,6 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "release": {
-    "analyzeCommits": {
-      "preset": "metahub",
-      "releaseRules": "conventional-changelog-metahub/release-rules"
-    },
-    "generateNotes": {
-      "preset": "metahub"
-    }
   },
   "repository": {
     "type": "git",
