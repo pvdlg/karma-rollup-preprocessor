@@ -1,7 +1,7 @@
 import pEvent from 'p-event';
 import tempDir from 'temp-dir';
 import {Server, constants} from 'karma';
-import karmaPreprocessor from '../../lib';
+import karmaPreprocessor from '../..';
 import {mockFactory} from './mock';
 
 /**

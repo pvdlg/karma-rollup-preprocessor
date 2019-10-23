@@ -1,9 +1,9 @@
-import path from 'path';
-import {merge} from 'lodash';
-import {FSWatcher} from 'chokidar';
-import nodeify from 'nodeify';
-import minimatch from 'minimatch';
-import {rollup} from 'rollup';
+const path = require('path');
+const {merge} = require('lodash');
+const {FSWatcher} = require('chokidar');
+const nodeify = require('nodeify');
+const minimatch = require('minimatch');
+const {rollup} = require('rollup');
 
 /**
  * Rollup preprocessor factory.
