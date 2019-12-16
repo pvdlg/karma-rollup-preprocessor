@@ -50,7 +50,7 @@ module.exports = function(config) {
   });
 };
 ```
-**_Note: Karma can auto-load plugins named `karma-*` (see [plugins](http://karma-runner.github.io/1.0/config/plugins.html)). Unfortunatly it doesn't work with [scoped packages](https://docs.npmjs.com/misc/scope), therefore `@metahub/karma-rollup-preprocessor` has to be explicitly added to the `plugins` configuration. In order to continue to automatically load other plugins you can add `karma-*` to the `plugins` configuration._**
+**_Note: Karma can auto-load plugins named `karma-*` (see [plugins](http://karma-runner.github.io/1.0/config/plugins.html)). Unfortunately it doesn't work with [scoped packages](https://docs.npmjs.com/misc/scope), therefore `@metahub/karma-rollup-preprocessor` has to be explicitly added to the `plugins` configuration. In order to continue to automatically load other plugins you can add `karma-*` to the `plugins` configuration._**
 
 **_Note: `@metahub/karma-rollup-preprocessor` embed its own watcher to monitor js module dependencies, therefore only the main entry point has to be configured in Karma. If Karma is configured with `autoWatch: true`, the modification of an imported js module will trigger a new build and test run._**
 
