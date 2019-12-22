@@ -37,7 +37,7 @@
     "rollup": "^1.0.0",
     "rollup-plugin-babel": "^4.0.1",
     "semantic-release": "^15.7.1",
-    "sinon": "^7.1.1",
+    "sinon": "^8.0.0",
     "temp-dir": "^2.0.0",
     "tempy": "^0.3.0",
     "xo": "^0.25.3"
