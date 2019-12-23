@@ -30,7 +30,7 @@
     "karma": "^4.4.1",
     "karma-jasmine": "^2.0.0",
     "karma-phantomjs-launcher": "^1.0.4",
-    "nyc": "^14.0.0",
+    "nyc": "^15.0.0",
     "p-event": "^4.1.0",
     "pify": "^4.0.0",
     "proxyquire": "^2.0.0",
