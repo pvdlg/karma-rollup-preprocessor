@@ -1,10 +1,10 @@
-import path from 'path';
-import {copy} from 'fs-extra';
-import test from 'ava';
-import {stub, match} from 'sinon';
-import tempy from 'tempy';
-import babel from 'rollup-plugin-babel';
-import {run, watch, waitForRunComplete} from './helpers/karma';
+const path = require('path');
+const {copy} = require('fs-extra');
+const test = require('ava');
+const {stub, match} = require('sinon');
+const tempy = require('tempy');
+const babel = require('rollup-plugin-babel');
+const {run, watch, waitForRunComplete} = require('./helpers/karma');
 
 let stubWrite;
 

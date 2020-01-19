@@ -1,7 +1,7 @@
-import {EventEmitter} from 'events';
-import proxyquire from 'proxyquire';
-import {spy, stub} from 'sinon';
-import pify from 'pify';
+const {EventEmitter} = require('events');
+const proxyquire = require('proxyquire');
+const {spy, stub} = require('sinon');
+const pify = require('pify');
 
 /**
  * @typedef {Object} MockPreprocessor
@@ -30,7 +30,7 @@ import pify from 'pify';
  * @param {Boolean} autoWatch `true` for autoWatch mode, `false` for a single run.
  * @return {MockFactory} mocked preprocessor factory and watcher.
  */
-export function mockFactory(autoWatch) {
+function mockFactory(autoWatch) {
 	const FSWatcher = stub();
 
 	return {
@@ -64,7 +64,7 @@ export function mockFactory(autoWatch) {
  * @param {Object} [config={}] Karma config to pass to the factory.
  * @return {MockPreprocessor} mocked preprocessor function and spies.
  */
-export async function mockPreprocessor(args = {}, config = {}) {
+async function mockPreprocessor(args = {}, config = {}) {
 	const debug = spy();
 	const error = spy();
 	const info = spy();
@@ -85,3 +85,5 @@ export async function mockPreprocessor(args = {}, config = {}) {
 
 	return {preprocessor, debug, error, info, refreshFiles, watcher: await watcher, FSWatcher};
 }
+
+module.exports = {mockFactory, mockPreprocessor};
