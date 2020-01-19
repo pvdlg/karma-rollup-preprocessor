@@ -1,6 +1,6 @@
-import path from 'path';
-import pEvent from 'p-event';
-import {rollup} from 'rollup';
+const path = require('path');
+const pEvent = require('p-event');
+const {rollup} = require('rollup');
 
 /**
  * Return a Promise that resolve when an event is emitted and reject after a timeout expire if the event is not emitted.
@@ -11,7 +11,7 @@ import {rollup} from 'rollup';
  * @param {Number} [timeout=30000] maximum time to wait for the event to be emitted.
  * @return {Promise} Promise tht resolve when the event is emitted.
  */
-export function waitFor(emitter, event, timeout = 30000) {
+function waitFor(emitter, event, timeout = 30000) {
 	return pEvent(emitter, event, {timeout});
 }
 
@@ -29,7 +29,7 @@ export function waitFor(emitter, event, timeout = 30000) {
  * @param {Object} [options={}] rollup options.
  * @return {Compiled} compiled code and source map.
  */
-export async function compile(file, options = {}) {
+async function compile(file, options = {}) {
 	if (options.output.sourcemap) {
 		options.output.sourcemap = 'inline';
 	}
@@ -45,3 +45,5 @@ export async function compile(file, options = {}) {
 
 	return {code: options.output.sourcemap ? `${code}\n//# sourceMappingURL=${map.toUrl()}\n` : code, map};
 }
+
+module.exports = {waitFor, compile};
