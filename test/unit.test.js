@@ -7,6 +7,8 @@ const babel = require('rollup-plugin-babel');
 const {waitFor, compile} = require('./helpers/utils');
 const {mockPreprocessor} = require('./helpers/mock');
 
+/* eslint prefer-named-capture-group: "off" */
+
 test('Compile JS file', async t => {
 	const fixture = 'test/fixtures/basic.js';
 	const options = {
