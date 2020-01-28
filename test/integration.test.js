@@ -6,6 +6,8 @@ const tempy = require('tempy');
 const babel = require('rollup-plugin-babel');
 const {run, watch, waitForRunComplete} = require('./helpers/karma');
 
+/* eslint prefer-named-capture-group: "off" */
+
 let stubWrite;
 
 test.before(() => {
