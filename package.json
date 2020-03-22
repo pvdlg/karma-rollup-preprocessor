@@ -18,7 +18,7 @@
     "nodeify": "^1.0.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0",
+    "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.0.0",
     "ava": "^3.1.0",
     "codecov": "^3.0.0",
